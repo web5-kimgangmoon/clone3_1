@@ -10,7 +10,7 @@ https://dribbble.com/shots/popular/product-design
 
 ### 스택
 
-next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-query, axios, zustand
+next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard
 
 ### 필요없는 라이브러리(클론 코딩과 관련없지만 개인학습 용도로 설치)
 
@@ -28,5 +28,9 @@ next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-qu
 - **2주차(4/19~26) 목표**: body
 
 ### 04/12
+
+1. 헤더작성중
+
+### 04/14
 
 1. 헤더작성중
