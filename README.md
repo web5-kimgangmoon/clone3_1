@@ -34,3 +34,8 @@ next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-qu
 ### 04/14
 
 1. 헤더작성중
+
+### 04/15
+
+1. 헤더작성중
+2. zustand와 observer 패턴을 활용한 document의 클릭이벤트 제어 커스텀 훅 생성.

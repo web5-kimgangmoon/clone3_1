@@ -5,8 +5,13 @@
   --foreground: #171717;
 }
 
+:root::selection {
+  color: black;
+  background-color: bisque;
+}
+
 @theme {
-  --basis-max: max-content;
+  --shadow-bottom: 0px 10px 40px 0px rgba(0, 0, 0, 0.1);
 }
 
 @utility container {
@@ -32,14 +37,12 @@ body {
 
 .placeholder {
   display: flex;
+  width: 100%;
   min-width: 0;
-  max-width: min-content;
-  text-overflow: ellipsis;
-  text-wrap: nowrap;
-  overflow: hidden;
 }
 
 .placeholder::placeholder {
   color: rgb(85, 85, 85);
   font-size: 0.9rem;
+  overflow: hidden;
 }
