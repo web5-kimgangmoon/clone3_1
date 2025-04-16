@@ -39,3 +39,11 @@ next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-qu
 
 1. 헤더작성중
 2. zustand와 observer 패턴을 활용한 document의 클릭이벤트 제어 커스텀 훅 생성.
+
+### 04/16
+
+1. 헤더에서 search 분리 필요.
+2. useEffect로 렌더링될 때마다 subscribe 되던 문제 수정.
+3. 전역 클릭이벤트를 한 차례 막을 수 있는 prevent 메서드 추가.
+4. search 컴포넌트를 작성하고, 그 컴포넌트 내에서 모든 버튼상태 관리를 따로 하는 것이 필요.
+5. 단어에 맞춰 bold가 되도록 코드 작성 필요.
