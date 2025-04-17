@@ -47,3 +47,9 @@ next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-qu
 3. 전역 클릭이벤트를 한 차례 막을 수 있는 prevent 메서드 추가.
 4. search 컴포넌트를 작성하고, 그 컴포넌트 내에서 모든 버튼상태 관리를 따로 하는 것이 필요.
 5. 단어에 맞춰 bold가 되도록 코드 작성 필요.
+
+### 04/17
+
+1. 헤더 파일, search ui가 지나치게 길어져 분리시켰습니다.
+2. 이름이 부적합하다고 판단되어 observable에서 eventList로 수정. 속성들도 그에 걸맞게 수정했습니다.
+3. sequelize 연결 성공, 성공한 내용은 dummy 폴더에 넣었습니다.

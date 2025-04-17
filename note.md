@@ -23,3 +23,7 @@ addEventListener로 추가된 이벤트 => on 이벤트.
 그래서 React의 onClick이 호출되지 않는 겁니다
 
 3. 이 경우 버튼을 클릭해도 React onClick 로그는 안 찍혀요. 왜냐하면 stopPropagation() 때문에 이벤트가 <div>나 document까지 올라가지 않아서, React가 그걸 모르고 지나치기 때문입니다.
+
+## 해결필요
+
+4. 헤더 드롭다운 모달 추가 필요, 반응형 작성이 필요합니다.

@@ -23,6 +23,10 @@ input:autofill {
 }
 
 @theme {
+  --breakpoint-xl: 1200px;
+  --breakpoint-lg: 960px;
+  --breakpoint-md: 790px;
+  --breakpoint-sm: 615px;
   --shadow-bottom: 0px 10px 40px 0px rgba(0, 0, 0, 0.1);
 }
 
