@@ -3,8 +3,10 @@
 import { Header } from "./ui/header/index";
 import { useEventListStore_globalClick } from "./zustand/eventList_globalClick";
 import { TanstackProvider } from "./components/tanstackProvider";
+import useBreakpointProvider from "./hooks/useBreakpointProvider";
 
 export default function Home() {
+  useBreakpointProvider();
   const execute = useEventListStore_globalClick((state) => state.execute);
 
   return (

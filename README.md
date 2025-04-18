@@ -53,3 +53,7 @@ next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-qu
 1. 헤더 파일, search ui가 지나치게 길어져 분리시켰습니다.
 2. 이름이 부적합하다고 판단되어 observable에서 eventList로 수정. 속성들도 그에 걸맞게 수정했습니다.
 3. sequelize 연결 성공, 성공한 내용은 dummy 폴더에 넣었습니다.
+
+### 04/18
+
+1. 헤더 반응형 작업중.

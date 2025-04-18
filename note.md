@@ -24,6 +24,11 @@ addEventListener로 추가된 이벤트 => on 이벤트.
 
 3. 이 경우 버튼을 클릭해도 React onClick 로그는 안 찍혀요. 왜냐하면 stopPropagation() 때문에 이벤트가 <div>나 document까지 올라가지 않아서, React가 그걸 모르고 지나치기 때문입니다.
 
+## 모달 관련
+
+1. absolute는 stciky를 제외한 모든 포지션 참조가능.
+2. document.documentElement의 overflow를 hidden으로 설정, scrollbar-width를 none으로 설정하면 스크린 lock 구현 가능. overflow를 unset으로 전환해도 scrollY값은 그대로 남아있기 때문에 원래 위치를 잃지 않는다.
+
 ## 해결필요
 
 4. 헤더 드롭다운 모달 추가 필요, 반응형 작성이 필요합니다.

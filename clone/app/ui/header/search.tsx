@@ -59,10 +59,11 @@ export const Search = ({
     push(autofillEv);
   }, []);
   return (
-    <form className={"ml-6 shrink-1 grow-1 w-full max-w-[520px] h-[60px]"}>
+    // <div className="absolute md:relative top-full left-0 md:static md:ml-6 py-2 md:py-0 flex items-center shrink-1 grow-1 w-full bg-white h-[60px]">
+    <form className="absolute md:relative top-full left-0 flex shrink-1 grow-1 px-4 md:px-0 md:ml-6 py-4 md:py-0 flex items-center shrink-1 grow-1 w-full bg-white ">
       <search
         className={clsx(
-          "group relative flex items-center w-full h-full pl-6 pr-1 bg-gray-100 rounded-4xl",
+          "group flex items-center w-full pl-6 pr-1 bg-gray-100 rounded-4xl h-[60px]",
           "border-3 border-gray-100 hover:border-pink-100 hover:bg-white transition-all",
           "focus-within:border-pink-100 focus-within:bg-white"
         )}
@@ -100,6 +101,7 @@ export const Search = ({
               "w-7 text-gray-100 group-hover:text-gray-400 peer-focus:text-gray-400 hover:text-black cursor-pointer",
               search ? "visible" : "invisible"
             )}
+            aria-hidden={search ? false : true}
             type="button"
             onClick={(e) => {
               setSearch("");
@@ -131,6 +133,7 @@ export const Search = ({
         />
       </search>
     </form>
+    // </div>
   );
 };
 
@@ -180,7 +183,7 @@ const Select = ({
         </button>
         <motion.div
           className={clsx(
-            "absolute bottom-auto left-0 w-max h-max select-none"
+            "absolute bottom-auto right-0 md:left-0 w-max h-max select-none"
           )}
           initial={{ visibility: "hidden" }}
           animate={{
@@ -193,6 +196,7 @@ const Select = ({
             bounce: 0,
             display: { delay: 0, duration: 0, bounce: 0 },
           }}
+          aria-hidden={!isOn}
         >
           <ul className="flex flex-col p-3 text-sm bg-white border-2 border-gray-100/50 rounded-lg shadow-bottom *:cursor-pointer">
             {menuArr.map((v, idx) => (
@@ -243,7 +247,7 @@ const AutofillBox = ({
   return (
     <div
       className={clsx(
-        "absolute top-full translate-y-1 left-0 w-full h-max select-none transition-all",
+        "absolute top-full translate-y-4 md:translate-y-1 left-0 w-full h-max select-none transition-all",
         "text-sm bg-white border-2 border-gray-100/50 rounded-lg shadow-bottom cursor-default"
       )}
       onClick={(e) => {
