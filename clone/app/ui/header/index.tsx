@@ -15,6 +15,7 @@ import { useEventListStore_globalClick } from "@/app/zustand/eventList_globalCli
 import { motion, useScroll } from "motion/react";
 import useLockScreen from "@/app/hooks/useLockScreen";
 import { SearchToggleImg } from "@/public/searchToggleImg";
+import { useBreakpointStore } from "@/app/zustand/breakpoint";
 
 export const Header = () => {
   const navMenuList = [
@@ -85,9 +86,20 @@ export const Header = () => {
   const [menu, setMenu] = useState("Shots");
   const [search, setSearch] = useState("");
 
-  const [isOnSearch, setIsOnSearch] = useState(true);
+  const [isOnSearch, setIsOnSearch] = useState(false);
   const [isTop, setIsTop] = useState(true);
   const scroll = useScroll();
+  const breakpoint = useBreakpointStore((state) => state.breakpoint);
+
+  const isMobile = useMemo(
+    () => breakpoint === "xs" || breakpoint === "sm",
+    [breakpoint]
+  );
+  const isSearchAnime = useMemo(
+    () => isTop || isOnSearch || (breakpoint !== "xs" && breakpoint !== "sm"),
+    [isTop, isOnSearch, breakpoint]
+  );
+
   useEffect(() => {
     if (scroll.scrollY.get() === 0) setIsTop(true);
     else setIsTop(false);
@@ -96,23 +108,35 @@ export const Header = () => {
     });
   }, []);
   return (
-    <header className="fixed top-0 left-0 z-100 flex items-center gap-[16px] w-full py-2 md:py-0 px-4 md:py-5 md:px-[40px] bg-white">
+    <header
+      className={clsx(
+        "fixed top-0 left-0 z-100 flex items-center gap-[13px] w-full py-2 md:py-0 px-4 md:py-5 md:px-[40px]",
+        "before:absolute before:content-[''] before:blcok before:top-0 before:left-0 before:bg-white before:w-full before:h-full before:z-[-1]"
+      )}
+    >
       <MenuNav_m navMenuList={navMenuList} />
       <Link href={"/"} className="w-[89px] *:w-full *:h-full shrink-0">
         <Logo />
       </Link>
-      {/* <div className="grow flex justify-end">
-          <Link
-            href={"/"}
-            className="flex md:hidden items-center px-5 py-2 w-max h-max shrink-0 text-sm text-white bg-black font-semibold hover:opacity-50 transition-opacity rounded-3xl"
-          >
-            Log in
-          </Link>
-        </div> */}
       <motion.div
-        className="flex shrink-1 grow-1 md:max-w-[544px]"
-        animate={{ display: isTop ? "block" : "none" }}
-        // variants={{"mobileSet":{""}}}
+        className="flex shrink-1 grow-1 w-full md:max-w-[544px] absolute md:relative top-0 left-0 z-[-2] md:z-0"
+        animate={["toggleAnime", "shiftLayout"]}
+        variants={{
+          toggleAnime: {
+            translateY: isSearchAnime ? "0px" : "-10px",
+            visibility: isSearchAnime ? "visible" : "hidden",
+            opacity: isSearchAnime ? 1 : 0,
+          },
+          shiftLayout: {
+            top: isMobile ? "100%" : "0",
+            transition: {
+              duration: 0.3,
+              bounce: 0,
+            },
+          },
+        }}
+        transition={isMobile ? { bounce: 0, duration: 0.2 } : { duration: 0 }}
+        aria-hidden={!isSearchAnime}
       >
         <Search
           menu={menu}
@@ -134,7 +158,13 @@ export const Header = () => {
         ))}
       </div>
       <div className="flex items-center justify-end grow shrink-0">
-        <button className="inline-block md:hidden mr-4 cursor-pointer">
+        <button
+          className={clsx(
+            "inline-block md:hidden mr-4 cursor-pointer transition-opacity",
+            isTop && "opacity-0"
+          )}
+          onClick={() => setIsOnSearch((v) => !v)}
+        >
           <SearchToggleImg />
         </button>
         <Link
@@ -145,7 +175,7 @@ export const Header = () => {
         </Link>
         <Link
           href={"/"}
-          className="flex items-center px-5 py-3 h-max shrink-0 text-sm text-white bg-black font-semibold hover:opacity-50 transition-opacity rounded-3xl"
+          className="flex items-center px-6 md:px-5 py-3 h-max shrink-0 text-[0.85rem] md:text-sm text-white bg-black font-semibold hover:opacity-50 transition-opacity rounded-3xl"
         >
           Log in
         </Link>

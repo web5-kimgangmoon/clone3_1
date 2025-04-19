@@ -9,6 +9,6 @@ export default function () {
       setBreakpoint(window.innerWidth);
     };
     window.addEventListener("resize", onResize);
-    return window.removeEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
 }
