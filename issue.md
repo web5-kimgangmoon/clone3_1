@@ -6,15 +6,27 @@
 
 ## 경과
 
-1. 문제점을 발견했다. react 구조상 실제 dom의 모든 이벤트의 버블링이 완료된 후, react에서 이벤트를 위임받아 모든 이벤트를 캡쳐링 방식으로 처리하고 있다는 점이였다. 그러므로 당연히 버블링을 기반으로 짰던 내 코드는 생각대로 돌아가지 않았다.
+1.  문제점을 발견했다. react 구조상 실제 dom의 모든 이벤트의 버블링이 완료된 후, react에서 이벤트를 위임받아 모든 이벤트를 캡쳐링 방식으로 처리하고 있다는 점이였다. 그러므로 당연히 버블링을 기반으로 짰던 내 코드는 생각대로 돌아가지 않았다.
 
-   - 예상치못한 부작용을 감안해서 코드를 짰음에도 문제가 발생했는데, addEventListener만으로 처리했고 추가적으로 react 컴포넌트에 onEvent를 추가해줬는데 addEventListener에서 이벤트 전파를 막고 있고 버블링 종료 후에 이벤트가 실행되는 react 특성상 onEvent가 동작하지 않았다.
+    - 예상치못한 부작용을 감안해서 코드를 짰음에도 문제가 발생했는데, addEventListener만으로 처리했고 추가적으로 react 컴포넌트에 onEvent를 추가해줬는데 addEventListener에서 이벤트 전파를 막고 있고 버블링 종료 후에 이벤트가 실행되는 react 특성상 onEvent가 동작하지 않았다.
 
-   - 추가적으로 쓸데없이 구조도 복잡해지고, useEffect와 useRef를 남용해서 쓸데없이 메모리의 소비가 추가적으로 증가했다.
+    - 추가적으로 쓸데없이 구조도 복잡해지고, useEffect와 useRef를 남용해서 쓸데없이 메모리의 소비가 추가적으로 증가했다.
 
-2. accordion이나 모달을 좀 더 쉽게 처리하기 위해 mui 라이브러리를 추가하려 한다.
+2.  accordion이나 모달을 좀 더 쉽게 처리하기 위해 mui 라이브러리를 추가하려 한다.
 
-https://mui.com/material-ui/react-menu/
+    - https://mui.com/material-ui/react-menu/
+
+    - 문제가 발생했다. 클론코딩의 목적상 커스텀이 좋은 라이브러리를 원했지만, mui는 커스텀의 여지가 적었다. 그래서 한 번 더 찾아봤고, @mui/base에서 파생된 base-ui 라이브러리를 찾았다.
+
+          https://base-ui.com/react/components/menu
+
+      - mui는 나중에 소규모 프로젝트를 시도해보면서 사용해볼 예정.
+
+      - 논리를 제공하는 라이브러리를 찾다가 새로운 라이브러리를 발견했다. base-ui는 상대적으로 복잡하고 많은 설정이 필요했고, 아직 버전업이 필요해보였다. 그렇다면 headless-ui를 활용해보려 한다. 예상대로 더 쉬운 편이다.
+
+      - base-ui는 세분화가 잘되어 있었지만, portal 컴포넌트 안에 positioner 컴포넌트 안에 넣고 popup 컴포넌트를 넣는등 설정이 복잡했다.
+
+      - https://headlessui.com/react/menu#installation
 
 ## 해결
 
@@ -23,3 +35,5 @@ https://mui.com/material-ui/react-menu/
    - 옵저버 패턴으로 이벤트를 추가하고 클릭 이벤트가 발생할 때마다 notify가 되어 실행되게 해주었고, 그 과정을 효율적으로 처리하기 위해 zustand 전역상태 관리 라이브러리를 활용하여 observable을 관리하고 observer들을 subscribe 및 unsubscribe가 가능하게 해줬다.
 
    - 덕분에 구조가 훨씬 간결해지고 예상치 않았지만 부작용으로 쓸데없이 남용되던 useEffect와 useRef의 수를 줄일 수가 있었다.
+
+2. headless ui의 최대강점은, 모든 ui를 fragment 형식으로 제공해준다. 그덕에 커스텀 태그 위나 아래에 wrapper를 씀으로써 문제가 생길 걱정 없이 motion-framer를 자윱롭게 쓸 수 있다. 물론 작업 시간은 늘겠지만, 클론코딩처럼 커스텀에 더 신경써야 한다면 mui보다 더 적합하다고 느낀다.

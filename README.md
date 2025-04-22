@@ -10,7 +10,7 @@ https://dribbble.com/shots/popular/product-design
 
 ### 스택
 
-next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard
+next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard, headless-ui
 
 ### 필요없는 라이브러리(클론 코딩과 관련없지만 개인학습 용도로 설치)
 
@@ -66,3 +66,7 @@ next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-qu
 
 1. 바디 작성 시작
 2. mui 시도 중
+
+### 04/21
+
+1. headless ui 발견

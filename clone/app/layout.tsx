@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "@/app/globals.css";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { theme } from "./theme";
+import { ThemeProvider } from "@mui/material";
 
 const pretendard = localFont({
   src: "../node_modules/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
@@ -20,7 +23,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={`antialiased`}>
-      {children}
+      <AppRouterCacheProvider options={{ key: "css" }}>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      </AppRouterCacheProvider>
     </html>
   );
 }

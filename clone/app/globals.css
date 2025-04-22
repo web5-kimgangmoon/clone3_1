@@ -32,6 +32,10 @@ input:autofill {
 
 @utility container {
   max-width: unset;
+  padding-inline: 1rem;
+  @media screen and (min-width: 790px) {
+    padding-inline: 40px;
+  }
 }
 
 @theme inline {
