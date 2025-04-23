@@ -1,53 +1,128 @@
 import { useEventListStore_globalClick } from "@/app/zustand/eventList_globalClick";
-import { ArrowDownIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownIcon,
+  CheckIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { motion } from "motion/react";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import calcBoundMove from "calc-bound-move";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import Link from "next/link";
 
 export const Body_header = () => {
+  const list: string[] = ["Popular", "New & Noteworthy"];
+  const categories: { title: string; href: string }[] = [
+    { title: "Discover", href: "/" },
+    { title: "Animation", href: "/" },
+    { title: "Branding", href: "/" },
+    { title: "Illustration", href: "/" },
+    { title: "Mobile", href: "/" },
+    { title: "Print", href: "/" },
+    { title: "Product Design", href: "/" },
+    { title: "Typography", href: "/" },
+    { title: "Web Design", href: "/" },
+  ];
+
+  const [selectedMenu, setSelectedMenu] = useState(list[0]);
+
   return (
-    <section className="container">
-      <MenuBtn />
+    <section className="container pt-8">
+      <header className="flex justify-between">
+        {/* <MenuBtn
+          title={selectedMenu}
+          setSelectedMenu={setSelectedMenu}
+          list={list}
+          selectedMenu={selectedMenu}
+        />
+        <Categories /> */}
+        <div></div>
+        <div></div>
+      </header>
     </section>
   );
 };
 
-const MenuBtn = () => {
-  const list = ["popular", "New & Noteworthy"];
-
+const MenuBtn = ({
+  className_menu,
+  title,
+  list,
+  selectedMenu,
+  setSelectedMenu,
+}: {
+  className_menu?: string;
+  title: string;
+  list: { title: string; href: string }[];
+  setSelectedMenu: (str: string) => void;
+  selectedMenu: string;
+}) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Menu data-open={open}>
       <div>
         <MenuButton
-          className={"flex items-center outline-0"}
+          className={
+            "flex items-center gap-4 px-4 py-[0.5rem] text-sm font-bold outline-0 cursor-pointer border border-gray-200 rounded-lg hover:shadow-bottom_s"
+          }
           onClick={(e) => {
             setOpen((v) => !v);
           }}
         >
-          Popular
-          <motion.div
-            animate={{ rotate: open ? "180deg" : "0" }}
+          {title}
+          <motion.span
+            animate={{ rotate: open ? 180 : 0 }}
             transition={{ bounce: 0 }}
           >
-            <ChevronDownIcon className="w-3" />
-          </motion.div>
+            <ChevronDownIcon className="h-3" />
+          </motion.span>
         </MenuButton>
         <MenuItems
-          anchor="bottom end"
-          className={"flex flex-col outline-0"}
+          anchor="bottom start"
+          className={clsx(
+            "outline-0 translate-y-3 bg-white border border-gray-200 p-3 rounded-lg",
+            className_menu
+          )}
           modal={false}
         >
           {list.map((v, idx) => (
             <MenuItem key={idx}>
-              <button>{v}</button>
+              <Link
+                className={clsx(
+                  "flex w-full justify-between text-xs text-left p-3 rounded-lg hover:bg-gray-100/50 cursor-pointer",
+                  selectedMenu === v.title && "bg-gray-200/50 "
+                )}
+                href={v.href}
+                onClick={() => setSelectedMenu(v.title)}
+              >
+                <span>{v.title}</span>
+                <span hidden={selectedMenu !== v.title}>
+                  <CheckIcon className="w-3 text-black" />
+                </span>
+              </Link>
             </MenuItem>
           ))}
         </MenuItems>
       </div>
     </Menu>
+  );
+};
+
+const Categories = ({ list }: { list: { title: string; href: string }[] }) => {
+  return (
+    <Swiper modules={[Navigation]}>
+      {list.map((v, idx) => (
+        <SwiperSlide key={idx}>
+          <Link href={v.href}>{v.title}</Link>
+        </SwiperSlide>
+      ))}
+    </Swiper>
   );
 };
 

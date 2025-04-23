@@ -62,11 +62,15 @@ next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-qu
 
 1. 헤더 완성.(헤더 반응형 애니메이션 작성완료)
 
-### 04/20
+### 04/21
 
 1. 바디 작성 시작
 2. mui 시도 중
 
-### 04/21
+### 04/22
 
 1. headless ui 발견
+
+### 04/23
+
+1. 다른 개념에 대해 공부했습니다.
