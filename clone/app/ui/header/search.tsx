@@ -60,7 +60,7 @@ export const Search = ({
   }, []);
   return (
     // <div className="absolute md:relative top-full left-0 md:static md:ml-6 py-2 md:py-0 flex items-center shrink-1 grow-1 w-full bg-white h-[60px]">
-    <form className="flex shrink-1 grow-1 px-4 md:px-0 md:ml-6 pb-2 md:py-0 flex items-center shrink-1 grow-1 w-full bg-white ">
+    <form className="flex relative shrink-1 grow-1 px-4 md:px-0 md:ml-6 pb-2 md:py-0 flex items-center shrink-1 grow-1 w-full bg-white ">
       <search
         className={clsx(
           "group flex items-center w-full pl-6 pr-1 bg-gray-100 rounded-4xl h-[48px] md:h-[60px]",

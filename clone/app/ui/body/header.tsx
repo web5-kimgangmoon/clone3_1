@@ -1,72 +1,73 @@
-import { useEventListStore_globalClick } from "@/app/zustand/eventList_globalClick";
 import {
-  ArrowDownIcon,
   CheckIcon,
   ChevronDownIcon,
+  ListBulletIcon,
 } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import { motion } from "motion/react";
-import { useCallback, useEffect, useId, useMemo, useState } from "react";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import calcBoundMove from "calc-bound-move";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  MenuSection,
+} from "@headlessui/react";
 
-import "swiper/css";
-import "swiper/css/navigation";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export const Body_header = () => {
-  const list: string[] = ["Popular", "New & Noteworthy"];
+  const menu: { title: string; href: string }[] = [
+    { title: "Popular", href: "popular" },
+    { title: "New & Noteworthy", href: "recent" },
+  ];
   const categories: { title: string; href: string }[] = [
-    { title: "Discover", href: "/" },
-    { title: "Animation", href: "/" },
-    { title: "Branding", href: "/" },
-    { title: "Illustration", href: "/" },
-    { title: "Mobile", href: "/" },
-    { title: "Print", href: "/" },
-    { title: "Product Design", href: "/" },
-    { title: "Typography", href: "/" },
-    { title: "Web Design", href: "/" },
+    { title: "Discover", href: "?category=Discover" },
+    { title: "Animation", href: "?category=Animation" },
+    { title: "Branding", href: "?category=Branding" },
+    { title: "Illustration", href: "?category=Illustaration" },
+    { title: "Mobile", href: "?category=Mobile" },
+    { title: "Print", href: "?category=Print" },
+    { title: "Product Design", href: "?category=Product Design" },
+    { title: "Typography", href: "?category=Typography" },
+    { title: "Web Design", href: "?category=Web Design" },
   ];
 
-  const [selectedMenu, setSelectedMenu] = useState(list[0]);
+  // const queryState = useQueryStore((state) => state.query);
 
   return (
     <section className="container pt-8">
-      <header className="flex justify-between">
-        {/* <MenuBtn
-          title={selectedMenu}
-          setSelectedMenu={setSelectedMenu}
-          list={list}
-          selectedMenu={selectedMenu}
-        />
-        <Categories /> */}
-        <div></div>
-        <div></div>
+      <header className="flex gap-10 justify-between">
+        <MenuBtn_link list={menu} search_key="sort" />
+        <Categories list={categories} />
+        <Filters />
       </header>
     </section>
   );
 };
 
-const MenuBtn = ({
+const MenuBtn_link = ({
   className_menu,
-  title,
   list,
-  selectedMenu,
-  setSelectedMenu,
+  search_key,
 }: {
   className_menu?: string;
-  title: string;
   list: { title: string; href: string }[];
-  setSelectedMenu: (str: string) => void;
-  selectedMenu: string;
+  search_key: string;
 }) => {
+  const query = useSearchParams();
   const [open, setOpen] = useState(false);
+
+  const url = useMemo(() => {
+    return new URLSearchParams(query);
+  }, [query]);
+  const selectedMenu = query.get(search_key) ?? list[0].href;
 
   return (
     <Menu data-open={open}>
-      <div>
+      <div className="shrink-0">
         <MenuButton
           className={
             "flex items-center gap-4 px-4 py-[0.5rem] text-sm font-bold outline-0 cursor-pointer border border-gray-200 rounded-lg hover:shadow-bottom_s"
@@ -75,7 +76,7 @@ const MenuBtn = ({
             setOpen((v) => !v);
           }}
         >
-          {title}
+          {list.find((v) => v.href === selectedMenu)?.title}
           <motion.span
             animate={{ rotate: open ? 180 : 0 }}
             transition={{ bounce: 0 }}
@@ -91,208 +92,131 @@ const MenuBtn = ({
           )}
           modal={false}
         >
-          {list.map((v, idx) => (
-            <MenuItem key={idx}>
-              <Link
-                className={clsx(
-                  "flex w-full justify-between text-xs text-left p-3 rounded-lg hover:bg-gray-100/50 cursor-pointer",
-                  selectedMenu === v.title && "bg-gray-200/50 "
-                )}
-                href={v.href}
-                onClick={() => setSelectedMenu(v.title)}
-              >
-                <span>{v.title}</span>
-                <span hidden={selectedMenu !== v.title}>
-                  <CheckIcon className="w-3 text-black" />
-                </span>
-              </Link>
-            </MenuItem>
-          ))}
+          {list.map((v, idx) => {
+            url.set(search_key, v.href);
+            return (
+              <MenuItem key={idx}>
+                <Link
+                  href={`?${url.toString()}`}
+                  className={clsx(
+                    "flex w-full justify-between text-xs text-left p-3 rounded-lg hover:bg-gray-100/50 cursor-pointer",
+                    selectedMenu === v.href && "bg-gray-200/50 "
+                  )}
+                  onClick={() => {
+                    setOpen(false);
+                  }}
+                >
+                  <span>{v.title}</span>
+                  <span hidden={selectedMenu !== v.href}>
+                    <CheckIcon className="w-3 text-black" />
+                  </span>
+                </Link>
+              </MenuItem>
+            );
+          })}
         </MenuItems>
       </div>
     </Menu>
   );
 };
 
-const Categories = ({ list }: { list: { title: string; href: string }[] }) => {
+const Categories = ({ list }: { list: { href: string; title: string }[] }) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    watchDrag: false,
+    inViewThreshold: 1,
+  });
+
+  const [position, setPosition] = useState(-2);
+  useEffect(() => {
+    const ev = (e: UseEmblaCarouselType[1]) => {
+      if (e?.slidesNotInView().length === 0) return setPosition(-2);
+      if (e?.slidesInView().includes(0)) return setPosition(-1);
+      if (e?.slidesInView().includes(list.length - 1)) return setPosition(1);
+      return setPosition(0);
+    };
+    if (emblaApi) ev(emblaApi);
+    emblaApi?.on("slidesInView", ev);
+    // emblaApi?.on("reInit", ev);
+    return () => {
+      emblaApi?.off("slidesInView", ev);
+      // emblaApi?.off("reInit", ev);
+    };
+  }, [emblaApi]);
+
+  // main
+  // viewport
+  // container
+  // slide
   return (
-    <Swiper modules={[Navigation]}>
-      {list.map((v, idx) => (
-        <SwiperSlide key={idx}>
-          <Link href={v.href}>{v.title}</Link>
-        </SwiperSlide>
-      ))}
-    </Swiper>
+    <div className="relative min-w-0">
+      <nav
+        ref={emblaRef}
+        className="relative flex grow max-w-[800px] h-full overflow-hidden px-4"
+      >
+        <ul className="flex gap-8 w-full h-full text-nowrap text-xs font-bold shrink-0 grow-0 basis-full">
+          {list.map((v, idx) => (
+            <li
+              key={idx}
+              className="flex items-center justify-center grow-0 shrink-0 basis-auto"
+            >
+              <Link href={v.href} className="shrink-0 grow-0">
+                {v.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <button
+        className="absolute top-1/2 left-0 -translate-y-1/2"
+        onClick={() => emblaApi?.scrollTo(0)}
+        hidden={position === -1 || position === -2}
+      >
+        prev
+      </button>
+      <button
+        className="absolute top-1/2 right-0 -translate-y-1/2"
+        onClick={() => emblaApi?.scrollTo(list.length - 1)}
+        hidden={position === 1 || position === -2}
+      >
+        next
+      </button>
+    </div>
   );
 };
 
-// const MenuBtn = () => {
-//   const [open, setOpen] = useState(false);
+// const Categories = ({ list }: { list: { title: string; href: string }[] }) => {
 //   return (
-//     <Menu.Root
-//       modal={false}
-//       open={open}
-//       onOpenChange={() => setOpen((v) => !v)}
+//     <Swiper
+//       modules={[Navigation]}
+//       slidesPerView={"auto"}
+//       loop
+//       spaceBetween={32}
+//       wrapperClass="!w-fit text-xs font-bold"
+//       // navigation
+//       allowTouchMove={false}
 //     >
-//       <Menu.Trigger className={"flex"}>
-//         Popular
-//         <ChevronDownIcon className="w-4 h-4" fillRule="evenodd" />
-//       </Menu.Trigger>
-//       <Menu.Portal>
-//         <Menu.Positioner>
-//           <Menu.Popup>
-//             <Menu.Arrow className={"w-4 h-4"}></Menu.Arrow>
-//             <Menu.Item>그냥</Menu.Item>
-//             <Menu.Item>그냥</Menu.Item>
-//             <Menu.Item>그냥</Menu.Item>
-//             <Menu.Item>그냥</Menu.Item>
-//             <Menu.Item>그냥</Menu.Item>
-//           </Menu.Popup>
-//         </Menu.Positioner>
-//       </Menu.Portal>
-//     </Menu.Root>
+//       {list.map((v, idx) => (
+//         <SwiperSlide
+//           key={idx}
+//           className="!w-fit !flex justify-center items-center"
+//         >
+//           <Link href={v.href}>{v.title}</Link>
+//         </SwiperSlide>
+//       ))}
+//     </Swiper>
 //   );
 // };
 
-// const MenuBtn = () => {
-//   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-//   const isOpen = useMemo(() => Boolean(anchorEl), [anchorEl]);
-//   const handleClick = useCallback(
-//     (e: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(e.currentTarget),
-//     []
-//   );
-//   const close = useCallback(() => setAnchorEl(null), []);
-//   return (
-//     <>
-//       <Button
-//         sx={{ backgroundColor: "white", minWidth: "0px" }}
-//         id="basic-button"
-//         onClick={handleClick}
-//         aria-controls={isOpen ? "basic-menu" : undefined}
-//         aria-haspopup="true"
-//         aria-expanded={isOpen ? "true" : undefined}
-//         disableFocusRipple
-//         disableTouchRipple
-//         disableElevation
-//       >
-//         아아
-//       </Button>
-//       <Menu
-//         disableScrollLock
-//         id="basic-menu"
-//         open={isOpen}
-//         onClose={close}
-//         slotProps={{ list: { "aria-labelledby": "basic-button" } }}
-//         anchorEl={anchorEl}
-
-//       >
-//         <MenuList>
-//           <MenuItem onClick={close}>아아</MenuItem>
-//         </MenuList>
-//         <MenuList>
-//           <MenuItem onClick={close}>나나</MenuItem>
-//         </MenuList>
-//       </Menu>
-//     </>
-//   );
-// };
-
-const Acorrdion = ({
-  menuArr,
-  setMenu,
-  selectedMenu,
-}: // setIsOn,
-// isOn,
-{
-  menuArr: string[];
-  setMenu: (str: string) => void;
-  selectedMenu: string;
-  // setIsOn: React.Dispatch<React.SetStateAction<boolean>>;
-  // isOn: boolean;
-}) => {
-  const push = useEventListStore_globalClick((state) => state.push);
-  const prevent = useEventListStore_globalClick((state) => state.prevent);
-
-  const id = useId();
-  const [isOn, setIsOn] = useState(false);
-
-  const menuEv = useMemo(() => ({ func: () => setIsOn(false), id }), []);
-
-  useEffect(() => {
-    push(menuEv);
-  }, []);
+const Filters = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <>
-      <div
-        className="relative cursor-default mr-4"
-        onClick={(e) => {
-          prevent(id);
-        }}
-      >
-        <button
-          type="button"
-          className="flex items-center gap-1 py-3 cursor-pointer group/option"
-          onClick={(e) => {
-            setIsOn((v) => !v);
-          }}
-        >
-          <span className="text-[0.9rem] font-semibold group-hover/option:opacity-50">
-            {selectedMenu}
-          </span>
-          <span className="*:w-full *:h-full w-[12px] text-black">
-            <ChevronDownIcon
-              fillRule="evenodd"
-              className={clsx(isOn && "hidden")}
-            />
-          </span>
-        </button>
-        <motion.div
-          className={clsx(
-            "absolute bottom-auto right-0 md:left-0 w-max h-max select-none"
-          )}
-          initial={{ visibility: "hidden" }}
-          animate={{
-            translateY: isOn ? 0 : -10,
-            visibility: isOn ? "visible" : "hidden",
-          }}
-          transition={{
-            delay: 0,
-            duration: 0.1,
-            bounce: 0,
-            display: { delay: 0, duration: 0, bounce: 0 },
-          }}
-          aria-hidden={!isOn}
-        >
-          <ul className="flex flex-col p-3 text-sm bg-white border-2 border-gray-100/50 rounded-lg shadow-bottom *:cursor-pointer">
-            {menuArr.map((v, idx) => (
-              <li
-                className={clsx(
-                  "block w-[120px] px-3 py-2 rounded-lg hover:bg-gray-100/50",
-                  v === selectedMenu && "font-bold"
-                )}
-                onClick={(e) => {
-                  setMenu(v);
-                  setIsOn(false);
-                }}
-                key={idx}
-              >
-                {v}
-              </li>
-            ))}
-          </ul>
-        </motion.div>
+    <Menu data-oepn={open}>
+      <div>
+        <MenuButton>
+          <ListBulletIcon className="w-4 h-4" />
+        </MenuButton>
+        <MenuSection></MenuSection>
       </div>
-      <select
-        className="appearance-none outline-none"
-        hidden
-        name="option"
-        onChange={() => {}}
-        value={selectedMenu}
-      >
-        {menuArr.map((v, idx) => (
-          <option key={idx}>{v}</option>
-        ))}
-      </select>
-    </>
+    </Menu>
   );
 };
