@@ -78,3 +78,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 04/24
 
 1. 새로운 슬라이드 라이브러리 embla-carousel-react 도입, swiper는 이번 클론코딩에서 뺐습니다.
+
+### 04/24
+
+1. headless UI 학습중...

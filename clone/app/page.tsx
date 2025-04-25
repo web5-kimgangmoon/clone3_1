@@ -5,6 +5,7 @@ import { useEventListStore_globalClick } from "./zustand/eventList_globalClick";
 import { TanstackProvider } from "./components/tanstackProvider";
 import useBreakpointProvider from "./hooks/useBreakpointProvider";
 import { Body } from "./ui/body";
+
 export default function Home() {
   useBreakpointProvider();
   const execute = useEventListStore_globalClick((state) => state.execute);
