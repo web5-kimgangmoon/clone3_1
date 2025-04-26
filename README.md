@@ -82,3 +82,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 04/24
 
 1. headless UI 학습중...
+
+### 04/25
+
+1. 게으름 부렸습니다. 다시는 이런 일 없도록 하겠습니다.
