@@ -13,8 +13,10 @@ import {
   DisclosureButton,
   DisclosurePanel,
   Field,
+  Fieldset,
   Input,
   Label,
+  Legend,
   Menu,
   MenuButton,
   MenuItem,
@@ -26,6 +28,8 @@ import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import useQuerySelected from "@/app/hooks/useQuerySelected";
+import { SearchToggleImg } from "@/public/searchToggleImg";
+import { useFilteredNumENg } from "@/app/hooks/useFilteredNumEng";
 
 export const Body_header = () => {
   const menu: { title: string; href: string }[] = [
@@ -237,7 +241,11 @@ const FilterSection = () => {
             translateY: { duration: 0.1, bounce: 0 },
           }}
         >
-          <Tags_search />
+          <Fieldset className={"grid grid-cols-3 grid-rows-1 gap-10 pt-8"}>
+            <Field as={Tags_search} />
+            <Field as={Tags_search} />
+            <Field as={Tags_search} />
+          </Fieldset>
         </motion.section>
       )}
     </DisclosurePanel>
@@ -246,32 +254,51 @@ const FilterSection = () => {
 
 const Tags_search = () => {
   const router = useRouter();
-  const { mkLink } = useQuerySelected("tag", "");
+  const { mkLink, selected } = useQuerySelected("tag", "");
   const submit = useCallback(
     (value: string) => {
       router.push(mkLink(value));
     },
     [mkLink, router]
   );
+  const mkAlphabetStr = useFilteredNumENg("");
   return (
     <Field>
-      <Label>Tags</Label>
-      <Input
-        placeholder=""
-        onKeyDown={(e) => {
-          if (e.code === "Enter") {
-            submit(e.currentTarget.value);
-            e.currentTarget.value = "";
-          }
-        }}
-        onChange={(e) => {
-          if (e.currentTarget.value.match(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/) !== null)
-            e.currentTarget.value = e.currentTarget.value.substring(
-              0,
-              e.currentTarget.value.length - 1
-            );
-        }}
-      ></Input>
+      <div className="w-full text-sm">
+        <div className="flex justify-between pb-2">
+          <Legend className={"font-bold"}>Tags</Legend>
+          <button
+            className={clsx(
+              selected === "" ? "hidden" : "block text-xs cursor-pointer"
+            )}
+          >
+            Clear
+          </button>
+        </div>
+        <Label className="relative block border border-gray-200 pl-10 pr-6 py-4 rounded-xl">
+          <span
+            className={
+              "absolute top-1/2 -translate-y-1/2 left-3 w-[1.1rem] *:w-full text-gray-500"
+            }
+          >
+            <SearchToggleImg />
+          </span>
+          <Input
+            className={"w-full outline-none"}
+            placeholder=""
+            onKeyDown={(e) => {
+              if (e.code === "Enter") {
+                submit(e.currentTarget.value);
+                e.currentTarget.value = mkAlphabetStr("");
+              }
+            }}
+            onChange={(e) => {
+              e.currentTarget.value = mkAlphabetStr(e.currentTarget.value);
+              // e.currentTarget.value = mkAlphabetStr(e.currentTarget.value);
+            }}
+          />
+        </Label>
+      </div>
     </Field>
   );
 };

@@ -10,7 +10,7 @@ https://dribbble.com/shots/popular/product-design
 
 ### 스택
 
-next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard, headless-ui
+next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard, headless-ui, zod
 
 ### 필요없는 라이브러리(클론 코딩과 관련없지만 개인학습 용도로 설치)
 
@@ -79,10 +79,14 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 
 1. 새로운 슬라이드 라이브러리 embla-carousel-react 도입, swiper는 이번 클론코딩에서 뺐습니다.
 
-### 04/24
+### 04/25
 
 1. headless UI 학습중...
 
-### 04/25
+### 04/26
 
 1. 게으름 부렸습니다. 다시는 이런 일 없도록 하겠습니다.
+
+### 04/28
+
+1. zod 추가, useFilteredNumEng 훅 추가
