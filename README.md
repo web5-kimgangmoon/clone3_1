@@ -90,3 +90,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 04/28
 
 1. zod 추가, useFilteredNumEng 훅 추가
+
+### 04/29
+
+1. body 헤더, 팔레트 제외한 레이아웃은 대체로 작성 완료.

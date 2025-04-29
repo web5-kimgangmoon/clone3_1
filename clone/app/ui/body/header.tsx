@@ -22,6 +22,7 @@ import {
   MenuItem,
   MenuItems,
   MenuSection,
+  Select,
 } from "@headlessui/react";
 
 import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
@@ -30,6 +31,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import useQuerySelected from "@/app/hooks/useQuerySelected";
 import { SearchToggleImg } from "@/public/searchToggleImg";
 import { useFilteredNumENg } from "@/app/hooks/useFilteredNumEng";
+import { ColorSearch_icon } from "@/public/colorSearch";
 
 export const Body_header = () => {
   const menu: { title: string; href: string }[] = [
@@ -49,27 +51,31 @@ export const Body_header = () => {
   ];
 
   return (
-    <section className="container pt-8">
+    <header className="pt-8">
       <Disclosure>
-        <header>
-          <div className="flex gap-10 justify-between">
+        <section>
+          <div className="container flex gap-10 justify-between">
             <MenuBtn_link list={menu} search_key="sort" />
             <Categories list={categories} search_key="category" />
             <DisclosureButton as={FilterBtn} />
           </div>
           <DisclosurePanel as={FilterSection} static />
-        </header>
+        </section>
       </Disclosure>
-    </section>
+    </header>
   );
 };
 
 const MenuBtn_link = ({
   className_menu,
+  className_btn,
+  className_container,
   list,
   search_key,
 }: {
   className_menu?: string;
+  className_btn?: string;
+  className_container?: string;
   list: { title: string; href: string }[];
   search_key: string;
 }) => {
@@ -77,11 +83,12 @@ const MenuBtn_link = ({
 
   return (
     <Menu>
-      <div className="shrink-0">
+      <div className={clsx("shrink-0", className_container)}>
         <MenuButton
-          className={
-            "flex items-center gap-4 px-4 py-[0.5rem] text-sm font-bold outline-0 cursor-pointer border border-gray-200 rounded-lg hover:shadow-bottom_s"
-          }
+          className={clsx(
+            "flex justify-between items-center gap-4 px-4 py-[0.5rem] text-sm font-bold outline-0 cursor-pointer border border-gray-200 rounded-lg hover:shadow-bottom_s",
+            className_btn
+          )}
         >
           {({ open }) => (
             <>
@@ -112,7 +119,7 @@ const MenuBtn_link = ({
                   selected === v.href && "bg-gray-200/50 "
                 )}
               >
-                <span>{v.title}</span>
+                <span className="pr-4">{v.title}</span>
                 <span hidden={selected !== v.href}>
                   <CheckIcon className="w-3 text-black" />
                 </span>
@@ -234,17 +241,21 @@ const FilterSection = () => {
             height: open ? "auto" : "0",
             translateY: open ? 0 : "-100%",
           }}
-          className="w-full h-40 overflow-hidden"
+          className="w-full overflow-hidden"
           hidden={false}
           transition={{
             height: { duration: 0.1 },
             translateY: { duration: 0.1, bounce: 0 },
           }}
         >
-          <Fieldset className={"grid grid-cols-3 grid-rows-1 gap-10 pt-8"}>
+          <Fieldset
+            className={
+              "container grid grid-cols-3 grid-rows-1 gap-10 pt-8 pb-4"
+            }
+          >
             <Field as={Tags_search} />
-            <Field as={Tags_search} />
-            <Field as={Tags_search} />
+            <Field as={Colors_search} />
+            <Field as={Timeframe_select} />
           </Fieldset>
         </motion.section>
       )}
@@ -254,14 +265,21 @@ const FilterSection = () => {
 
 const Tags_search = () => {
   const router = useRouter();
+
   const { mkLink, selected } = useQuerySelected("tag", "");
+  const { mkAlphabetStr, value } = useFilteredNumENg(selected);
+
   const submit = useCallback(
     (value: string) => {
       router.push(mkLink(value));
     },
     [mkLink, router]
   );
-  const mkAlphabetStr = useFilteredNumENg("");
+  const clear = useCallback(() => {
+    router.push(mkLink(""));
+    mkAlphabetStr("");
+  }, [mkLink, router]);
+
   return (
     <Field>
       <div className="w-full text-sm">
@@ -271,11 +289,12 @@ const Tags_search = () => {
             className={clsx(
               selected === "" ? "hidden" : "block text-xs cursor-pointer"
             )}
+            onClick={clear}
           >
             Clear
           </button>
         </div>
-        <Label className="relative block border border-gray-200 pl-10 pr-6 py-4 rounded-xl">
+        <Label className={clsx("relative block")}>
           <span
             className={
               "absolute top-1/2 -translate-y-1/2 left-3 w-[1.1rem] *:w-full text-gray-500"
@@ -284,21 +303,174 @@ const Tags_search = () => {
             <SearchToggleImg />
           </span>
           <Input
-            className={"w-full outline-none"}
+            autoComplete={"off"}
+            className={clsx(
+              "w-full h-full outline-none transition-all duration-250 border border-gray-200 pl-10 pr-6 py-4 rounded-xl",
+              "hover:shadow-pink",
+              "focus:shadow-pink focus:border-pink-200"
+            )}
             placeholder=""
+            value={value}
             onKeyDown={(e) => {
               if (e.code === "Enter") {
-                submit(e.currentTarget.value);
-                e.currentTarget.value = mkAlphabetStr("");
+                submit(value);
               }
             }}
             onChange={(e) => {
-              e.currentTarget.value = mkAlphabetStr(e.currentTarget.value);
+              mkAlphabetStr(e.currentTarget.value);
               // e.currentTarget.value = mkAlphabetStr(e.currentTarget.value);
+            }}
+            onBlur={(e) => {
+              submit(value);
             }}
           />
         </Label>
       </div>
     </Field>
+  );
+};
+
+const Colors_search = () => {
+  const router = useRouter();
+
+  const { mkLink, selected } = useQuerySelected("color", "");
+  const { mkAlphabetStr, value } = useFilteredNumENg(selected, 6);
+  const [isFocus, setIsFocus] = useState(false);
+
+  const isBlank = useMemo(() => !isFocus && !value, [isFocus, value]);
+  const submit = useCallback(
+    (value: string) => {
+      const upper = value.toUpperCase();
+      mkAlphabetStr(upper);
+      router.push(mkLink(upper));
+    },
+    [mkLink, router]
+  );
+  const clear = useCallback(() => {
+    router.push(mkLink(""));
+    mkAlphabetStr("");
+  }, [mkLink, router]);
+
+  return (
+    <div>
+      <Field>
+        <div className="w-full text-sm relative">
+          <div className="flex justify-between pb-2">
+            <Legend className={"font-bold"}>Color</Legend>
+            <button
+              className={clsx(
+                selected === "" ? "hidden" : "block text-xs cursor-pointer"
+              )}
+              onClick={clear}
+            >
+              Clear
+            </button>
+          </div>
+          <Label className={clsx("relative block")}>
+            <span
+              className={
+                "absolute top-1/2 -translate-y-1/2 left-3 w-[1.1rem] *:w-full text-gray-500"
+              }
+            >
+              <ColorSearch_icon />
+            </span>
+            <span
+              hidden={isBlank}
+              className={"absolute top-1/2 -translate-y-1/2 left-10 w-[1.1rem]"}
+            >
+              #
+            </span>
+
+            <Input
+              autoComplete={"off"}
+              className={clsx(
+                "w-full h-full outline-none border border-gray-200 pr-6 py-4 rounded-xl",
+                "hover:shadow-pink",
+                "focus:shadow-pink focus:border-pink-200",
+                isBlank ? "pl-10" : "pl-12"
+              )}
+              style={{
+                transitionProperty: "box-shadow, border-color",
+                transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+                transitionDuration: "250ms",
+              }}
+              placeholder="Enter hex or select"
+              value={value}
+              onKeyDown={(e) => {
+                if (e.code === "Enter") {
+                  submit(value);
+                }
+              }}
+              onChange={(e) => {
+                mkAlphabetStr(e.currentTarget.value);
+                // e.currentTarget.value = mkAlphabetStr(e.currentTarget.value);
+              }}
+              onFocus={() => setIsFocus(true)}
+              onBlur={(e) => {
+                setIsFocus(false);
+                submit(value);
+              }}
+            />
+          </Label>
+        </div>
+      </Field>
+      <Menu>
+        <div className="h-0">
+          <MenuButton className={"w-full"}></MenuButton>
+          <MenuItems
+            anchor={"bottom start"}
+            static
+            className="translate-y-[8px] w-[var(--button-width)] h-12 overflow-hidden border border-gray-300 rounded-lg"
+            modal={false}
+            data-open={isFocus}
+            hidden={!isFocus}
+          >
+            <MenuItem>
+              <div>아ㅓㅁ노안ㅁ</div>
+            </MenuItem>
+          </MenuItems>
+        </div>
+      </Menu>
+    </div>
+  );
+};
+
+const Timeframe_select = () => {
+  const router = useRouter();
+
+  const { mkLink, selected } = useQuerySelected("timeframe", "");
+
+  const clear = useCallback(() => {
+    router.push(mkLink(""));
+  }, [mkLink, router]);
+
+  return (
+    <div className="flex flex-col w-full text-sm">
+      <div className="flex justify-between pb-2">
+        <h2 className={"font-bold"}>Timeframe</h2>
+        <button
+          className={clsx(
+            selected === "" ? "hidden" : "block text-xs cursor-pointer"
+          )}
+          hidden={selected === ""}
+          onClick={clear}
+        >
+          Clear
+        </button>
+      </div>
+      <MenuBtn_link
+        search_key="timeframe"
+        className_container="grow"
+        className_btn="w-full h-full !rounded-xl"
+        className_menu="w-[var(--button-width)]"
+        list={[
+          { href: "", title: "NOW" },
+          { href: "week", title: "This Past Week" },
+          { href: "month", title: "This Past Month" },
+          { href: "year", title: "This Past Year" },
+          { href: "ever", title: "All Time" },
+        ]}
+      ></MenuBtn_link>
+    </div>
   );
 };

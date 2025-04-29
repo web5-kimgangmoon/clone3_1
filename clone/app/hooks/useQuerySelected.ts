@@ -11,7 +11,8 @@ export default function (search_key: string, init: string) {
   }, [query]);
   const mkLink = useCallback(
     (href: string) => {
-      url.set(search_key, href);
+      if (href !== "") url.set(search_key, href);
+      else url.delete(search_key);
       return "?" + url.toString();
     },
     [url, search_key]
