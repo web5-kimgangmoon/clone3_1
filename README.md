@@ -94,3 +94,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 04/29
 
 1. body 헤더, 팔레트 제외한 레이아웃은 대체로 작성 완료.
+
+### 04/30
+
+1. body 헤더 완성.

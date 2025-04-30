@@ -32,6 +32,7 @@ import useQuerySelected from "@/app/hooks/useQuerySelected";
 import { SearchToggleImg } from "@/public/searchToggleImg";
 import { useFilteredNumENg } from "@/app/hooks/useFilteredNumEng";
 import { ColorSearch_icon } from "@/public/colorSearch";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const Body_header = () => {
   const menu: { title: string; href: string }[] = [
@@ -51,10 +52,10 @@ export const Body_header = () => {
   ];
 
   return (
-    <header className="pt-8">
+    <header className="pt-4 lg:pt-8">
       <Disclosure>
         <section>
-          <div className="container flex gap-10 justify-between">
+          <div className="relative container flex gap-x-10 gap-y-5 pb-5 justify-between flex-wrap lg:flex-nowrap z-10">
             <MenuBtn_link list={menu} search_key="sort" />
             <Categories list={categories} search_key="category" />
             <DisclosureButton as={FilterBtn} />
@@ -105,7 +106,7 @@ const MenuBtn_link = ({
         <MenuItems
           anchor="bottom start"
           className={clsx(
-            "outline-0 translate-y-3 bg-white border border-gray-200 p-3 rounded-lg",
+            "outline-0 translate-y-3 bg-white border border-gray-200 p-3 rounded-lg z-20",
             className_menu
           )}
           modal={false}
@@ -163,69 +164,88 @@ const Categories = ({
   }, [emblaApi]);
 
   return (
-    <div className="relative min-w-0">
-      <nav
-        ref={emblaRef}
-        className="relative flex grow h-full overflow-hidden px-4"
-      >
-        <ul className="flex gap-2 w-full h-full text-nowrap text-sm font-bold shrink-0 grow-0 basis-full">
-          {list.map((v, idx) => (
-            <li key={idx} className={clsx("block grow-0 shrink-0 basis-auto ")}>
-              <Link
-                href={mkLink(v.href)}
-                className={clsx(
-                  "flex items-center justify-center shrink-0 grow-0 h-full w-auto hover:text-black/50 transition-colors py-1 px-4 rounded-3xl",
-                  selected === v.href &&
-                    "hover:text-black! hover:bg-zinc-200/75 bg-zinc-200/50"
-                )}
+    <div className="relative flex min-w-0 grow-1 shrink-1 w-full mx-[-15px] lg:w-auto order-3 lg:order-none bg-white pt-5 lg:pt-0 border-gray-200 border-t lg:border-t-0 z-10 px-[15px]">
+      <div className="relative grow-1 shrink-1 w-full">
+        <nav
+          ref={emblaRef}
+          className="relative flex grow h-full overflow-hidden px-4"
+        >
+          <ul className="flex gap-2 w-full h-full text-nowrap text-sm font-bold shrink-0 grow-0 basis-full">
+            {list.map((v, idx) => (
+              <li
+                key={idx}
+                className={clsx("block grow-0 shrink-0 basis-auto ")}
               >
-                {v.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <button
-        className="absolute top-1/2 left-0 -translate-y-1/2 flex justify-center items-center h-full aspect-square cursor-pointer"
-        onClick={() => {
-          emblaApi?.scrollTo(0);
-          setPosition(1);
-        }}
-        hidden={position === -1 || position === -2}
-        style={{
-          background:
-            "linear-gradient(to left, rgba(255, 255, 255, 0.5), rgba(255,255,255,1),rgba(255,255,255,1))",
-        }}
-      >
-        <ChevronLeftIcon className="w-4" strokeWidth={3} />
-      </button>
-      <button
-        className="absolute top-1/2 right-0 -translate-y-1/2 flex justify-center items-center h-full aspect-square cursor-pointer"
-        onClick={() => {
-          emblaApi?.scrollTo(list.length - 1);
-          setPosition(-1);
-        }}
-        hidden={position === 1 || position === -2}
-        style={{
-          background:
-            "linear-gradient(to right, rgba(255, 255, 255, 0.5),rgba(255,255,255,1), rgba(255,255,255,1),rgba(255,255,255,1))",
-        }}
-      >
-        <ChevronRightIcon className="w-4" strokeWidth={3} />
-      </button>
+                <Link
+                  href={mkLink(v.href)}
+                  className={clsx(
+                    "flex items-center justify-center shrink-0 grow-0 h-full w-auto hover:text-black/50 transition-colors py-1 px-4 rounded-3xl",
+                    selected === v.href &&
+                      "hover:text-black! hover:bg-zinc-200/75 bg-zinc-200/50"
+                  )}
+                >
+                  {v.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <button
+          className="absolute top-1/2 left-0 -translate-y-1/2 flex justify-center items-center h-full aspect-square cursor-pointer"
+          onClick={() => {
+            emblaApi?.scrollTo(0);
+            setPosition(1);
+          }}
+          hidden={position === -1 || position === -2}
+          style={{
+            background:
+              "linear-gradient(to left, rgba(255, 255, 255, 0.5), rgba(255,255,255,1),rgba(255,255,255,1))",
+          }}
+        >
+          <ChevronLeftIcon className="w-4" strokeWidth={3} />
+        </button>
+        <button
+          className="absolute top-1/2 right-0 -translate-y-1/2 flex justify-center items-center h-full aspect-square cursor-pointer"
+          onClick={() => {
+            emblaApi?.scrollTo(list.length - 1);
+            setPosition(-1);
+          }}
+          hidden={position === 1 || position === -2}
+          style={{
+            background:
+              "linear-gradient(to right, rgba(255, 255, 255, 0.5),rgba(255,255,255,1), rgba(255,255,255,1),rgba(255,255,255,1))",
+          }}
+        >
+          <ChevronRightIcon className="w-4" strokeWidth={3} />
+        </button>
+      </div>
     </div>
   );
 };
 
 const FilterBtn = ({}: // setOpen,
 {}) => {
+  const searchs = useSearchParams();
+  const cnt = useMemo(() => {
+    let cnt = 0;
+    if (searchs.get("color") !== null) cnt++;
+    if (searchs.get("tag") !== null) cnt++;
+    if (searchs.get("timeframe") !== null) cnt++;
+    return cnt;
+  }, [searchs]);
   return (
     <DisclosureButton
       className={
-        "flex justify-center items-center gap-1 ml-20 py-1 px-4 border border-gray-200 rounded-3xl cursor-pointer"
+        "flex justify-center items-center gap-2 ml-20 py-1 px-4 border border-gray-200 rounded-3xl cursor-pointer"
       }
     >
-      <ListBulletIcon className="w-4 h-4" />
+      {cnt === 0 ? (
+        <ListBulletIcon className="w-4 h-4" />
+      ) : (
+        <div className="flex justify-center items-center w-4 h-4 rounded-full bg-pink-300 text-[0.6rem] text-white">
+          {cnt}
+        </div>
+      )}
       <span className="text-sm">Filters</span>
     </DisclosureButton>
   );
@@ -249,9 +269,7 @@ const FilterSection = () => {
           }}
         >
           <Fieldset
-            className={
-              "container grid grid-cols-3 grid-rows-1 gap-10 pt-8 pb-4"
-            }
+            className={"container grid lg:grid-cols-3 gap-10 pt-8 pb-4"}
           >
             <Field as={Tags_search} />
             <Field as={Colors_search} />
@@ -351,6 +369,26 @@ const Colors_search = () => {
     mkAlphabetStr("");
   }, [mkLink, router]);
 
+  const colors = useMemo(() => {
+    const set = new Set<string>();
+    for (let i = 0; i < 105; i++) {
+      let result = Math.round(Math.random() * 1000000);
+      while (result < 100000) {
+        result *= 10;
+      }
+
+      set.add(String(result));
+    }
+    while (set.size !== 105) {
+      let result = Math.round(Math.random() * 1000000);
+      while (result < 100000) {
+        result *= 10;
+      }
+      set.add(String(result));
+    }
+    return [...set.values()];
+  }, []);
+
   return (
     <div>
       <Field>
@@ -369,10 +407,20 @@ const Colors_search = () => {
           <Label className={clsx("relative block")}>
             <span
               className={
-                "absolute top-1/2 -translate-y-1/2 left-3 w-[1.1rem] *:w-full text-gray-500"
+                "absolute top-1/2 -translate-y-1/2 left-3 w-[1.1rem] *:w-full"
               }
+              hidden={selected.length > 0}
             >
               <ColorSearch_icon />
+            </span>
+            <span
+              className={
+                "absolute top-1/2 -translate-y-1/2 left-3 w-[1.1rem] h-[1.1rem] rounded-full"
+              }
+              style={{ backgroundColor: "#" + selected }}
+              hidden={!selected}
+            >
+              <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1/4 h-1/4 bg-white rounded-full"></span>
             </span>
             <span
               hidden={isBlank}
@@ -414,24 +462,63 @@ const Colors_search = () => {
           </Label>
         </div>
       </Field>
-      <Menu>
-        <div className="h-0">
-          <MenuButton className={"w-full"}></MenuButton>
-          <MenuItems
-            anchor={"bottom start"}
-            static
-            className="translate-y-[8px] w-[var(--button-width)] h-12 overflow-hidden border border-gray-300 rounded-lg"
-            modal={false}
-            data-open={isFocus}
-            hidden={!isFocus}
-          >
-            <MenuItem>
-              <div>아ㅓㅁ노안ㅁ</div>
-            </MenuItem>
-          </MenuItems>
-        </div>
-      </Menu>
+      <Palette
+        isFocus={isFocus}
+        colors={colors}
+        mkAlphabetStr={mkAlphabetStr}
+        router={router}
+        mkLink={mkLink}
+      />
     </div>
+  );
+};
+
+const Palette = ({
+  isFocus,
+  colors,
+  mkAlphabetStr,
+  router,
+  mkLink,
+}: {
+  isFocus: boolean;
+  colors: string[];
+  mkAlphabetStr: (str: string) => void;
+  router: AppRouterInstance;
+  mkLink: (str: string) => string;
+}) => {
+  return (
+    <Menu>
+      <div className="h-0">
+        <MenuButton className={"w-full"}></MenuButton>
+        <MenuItems
+          anchor={"bottom start"}
+          className={clsx(
+            "translate-y-[0px] w-[var(--button-width)] h-32 overflow-hidden border border-gray-300 rounded-lg bg-white"
+          )}
+          modal={false}
+          static
+          unmount={false}
+          hidden={!isFocus}
+        >
+          {
+            <ul className="grid grid-cols-15 w-full h-32 px-4 pt-4 pb-1">
+              {colors.map((v, idx) => (
+                <MenuItem key={idx}>
+                  <li
+                    className="cursor-pointer hover:scale-150"
+                    style={{ backgroundColor: "#" + v }}
+                    onPointerDown={(e) => {
+                      mkAlphabetStr(v);
+                      router.push(mkLink(v));
+                    }}
+                  ></li>
+                </MenuItem>
+              ))}
+            </ul>
+          }
+        </MenuItems>
+      </div>
+    </Menu>
   );
 };
 
