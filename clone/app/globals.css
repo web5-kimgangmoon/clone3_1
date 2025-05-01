@@ -30,6 +30,21 @@ input:autofill {
   --shadow-bottom: 0px 10px 40px 0px rgba(0, 0, 0, 0.1);
   --shadow-bottom_s: 0px 4px 5px -2px rgba(0, 0, 0, 0.05);
   --shadow-pink: 0px 0px 0px 4px #f01ab717;
+  --linear-article: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.0001),
+    rgba(0, 0, 0, 0.0005),
+    rgba(0, 0, 0, 0.002),
+    rgba(0, 0, 0, 0.004),
+    rgba(0, 0, 0, 0.005),
+    rgba(0, 0, 0, 0.01),
+    rgba(0, 0, 0, 0.02),
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.3)
+  );
 }
 
 @utility container {

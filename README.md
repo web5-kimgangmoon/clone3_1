@@ -98,3 +98,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 04/30
 
 1. body 헤더 완성.
+
+### 05/01
+
+1. 아이템 기본상태 완성, 상호작용 추가 필요.
