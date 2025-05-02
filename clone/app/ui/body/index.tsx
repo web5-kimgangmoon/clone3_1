@@ -1,8 +1,11 @@
 import clsx from "clsx";
 import { Body_header } from "./header";
 import Image from "next/image";
-import { EyeIcon, HeartIcon } from "@heroicons/react/24/outline";
+import { DocumentIcon, EyeIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { Dialog } from "@headlessui/react";
 
 type ArticleItem = {
   img: string;
@@ -12,6 +15,8 @@ type ArticleItem = {
   like: string;
   looks: string;
   href: string;
+  href_main: string;
+  href_sub: string;
 };
 
 export const Body = () => {
@@ -24,6 +29,8 @@ export const Body = () => {
       like: "111",
       looks: "20.3k",
       href: "/",
+      href_main: "/",
+      href_sub: "/",
     },
   ];
   return (
@@ -34,7 +41,7 @@ export const Body = () => {
       )}
     >
       <Body_header />
-      <section className="container grid  grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+      <section className="container grid  grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-10">
         {articleList.map((v, idx) => (
           <ArticleItem {...v} key={idx} />
         ))}
@@ -60,28 +67,82 @@ const ArticleItem = ({
   like,
   looks,
   href,
+  href_main,
+  href_sub,
 }: ArticleItem) => {
+  const [hoverBtnLine, setHoverBtnLine] = useState(false);
+  const [openHoverCard, setOpenHoverCard] = useState(false);
+  useEffect(() => {
+    if (!hoverBtnLine) setOpenHoverCard(false);
+  }, [hoverBtnLine]);
   return (
     <article className="aspect-4/3">
       <div className={clsx("relative h-full rounded-xl")}>
         <figure className="w-full h-full relative">
-          <Image src={"/" + img} alt={img} fill></Image>
+          <Image src={"/" + img} alt={img} fill className="rounded-xl"></Image>
         </figure>
         <Link
           href={href}
           className={clsx(
-            "absolute top-0 left-0 w-full h-full",
+            "absolute top-0 left-0 w-full h-full group/link",
             "before:block before:content-[''] before:w-full before:h-full before:bg-[image:var(--linear-article)] before:opacity-0 hover:before:opacity-100 before:transition-opacity"
           )}
         >
-          <div className="opacity-0 hover:opacity-100 absolute top-0 left-0 w-full h-full flex flex-col justify-end text-white">
-            <span>Jobs platform dashboard</span>
+          <div className="opacity-0 group-hover/link:opacity-100 absolute top-3/4 left-0 flex gap-2 justify-between items-center w-full h-[25%] p-3 text-white font-bold">
+            <span className="truncate">Jobs platform dashboard</span>
+            <div className="flex gap-2">
+              <span className="inline-block text-black bg-white rounded-full p-3">
+                <DocumentIcon className="w-5" />
+              </span>
+              <span className="inline-block text-black bg-white rounded-full p-3">
+                <HeartIcon className="w-5" />
+              </span>
+            </div>
           </div>
         </Link>
       </div>
-      <div className="grid grid-cols-2 grid-rows-1 p-1">
-        <div className="text-sm select-none">
-          <button className="flex items-center gap-2 cursor-pointer">
+      <motion.div
+        className="relative grid grid-cols-2 grid-rows-1 p-1"
+        onHoverStart={() => setHoverBtnLine(true)}
+        onHoverEnd={() => setHoverBtnLine(false)}
+      >
+        <motion.div
+          className="absolute top-0 -translate-y-full left-0 w-[500px] h-[200px] bg-red-300 rounded-xl z-10 shadow-xl"
+          initial={{ display: "none" }}
+          animate={{
+            display: openHoverCard ? "block" : "none",
+            opacity: openHoverCard ? 1 : 0,
+          }}
+          transition={{ duration: openHoverCard ? 0.1 : 0 }}
+          // style={{ transitionBehavior: "allow-discrete" }}
+        >
+          <div>
+            <Link href={href}>
+              <Image
+                src={"/" + icon}
+                alt={icon}
+                width={24}
+                height={24}
+                className="rounded-full"
+              ></Image>
+            </Link>
+            <Link
+              href={href_sub}
+              className="block w-auto h-auto text-[0.65rem] font-bold text-white py-[0.1rem] px-[0.2rem] bg-gray-300 hover:bg-black rounded-sm cursor-pointer"
+            >
+              {sub}
+            </Link>
+          </div>
+          <div></div>
+        </motion.div>
+        <div className="flex items-center gap-2 text-sm select-none">
+          <motion.a
+            className="flex items-center gap-2 cursor-pointer"
+            onHoverStart={() => {
+              setOpenHoverCard(true);
+            }}
+            href={href_main}
+          >
             <Image
               src={"/" + icon}
               alt={icon}
@@ -90,10 +151,13 @@ const ArticleItem = ({
               className="rounded-full"
             ></Image>
             <h3 className="font-bold">{title}</h3>
-            <span className="block w-auto h-auto text-[0.65rem] font-bold text-white py-[0.1rem] px-[0.2rem] bg-gray-300 hover:bg-black rounded-sm">
-              {sub}
-            </span>
-          </button>
+          </motion.a>
+          <Link
+            href={href_sub}
+            className="block w-auto h-auto text-[0.65rem] font-bold text-white py-[0.1rem] px-[0.2rem] bg-gray-300 hover:bg-black rounded-sm cursor-pointer"
+          >
+            {sub}
+          </Link>
         </div>
         <div className="flex justify-end items-center basis-full gap-2">
           <span className="flex items-center gap-1">
@@ -108,7 +172,7 @@ const ArticleItem = ({
             <span className="text-xs">{looks}</span>
           </span>
         </div>
-      </div>
+      </motion.div>
     </article>
   );
 };

@@ -55,8 +55,10 @@ export const Body_header = () => {
     <header className="pt-4 lg:pt-8">
       <Disclosure>
         <section>
-          <div className="relative container flex gap-x-10 gap-y-5 pb-5 justify-between flex-wrap lg:flex-nowrap z-10">
-            <MenuBtn_link list={menu} search_key="sort" />
+          <div className="relative container flex gap-y-5 pb-5 justify-between flex-wrap lg:flex-nowrap z-10">
+            <div className="grow shrink-0 mr-[10px] lg:mr-[30px] xl:mr-[40px]">
+              <MenuBtn_link list={menu} search_key="sort" />
+            </div>
             <Categories list={categories} search_key="category" />
             <DisclosureButton as={FilterBtn} />
           </div>

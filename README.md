@@ -102,3 +102,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 05/01
 
 1. 아이템 기본상태 완성, 상호작용 추가 필요.
+
+### 05/02
+
+1. 아이템의 interaction 작성 중.
