@@ -166,7 +166,7 @@ const Categories = ({
   }, [emblaApi]);
 
   return (
-    <div className="relative flex min-w-0 grow-1 shrink-1 w-full mx-[-15px] lg:w-auto order-3 lg:order-none bg-white pt-5 lg:pt-0 border-gray-200 border-t lg:border-t-0 z-10 px-[15px]">
+    <div className="relative flex min-w-0 grow-1 shrink-1 w-full mx-[-15px] lg:w-fit order-3 lg:order-none bg-white pt-5 lg:pt-0 border-gray-200 border-t lg:border-t-0 z-10 px-[15px]">
       <div className="relative grow-1 shrink-1 w-full">
         <nav
           ref={emblaRef}
@@ -176,12 +176,12 @@ const Categories = ({
             {list.map((v, idx) => (
               <li
                 key={idx}
-                className={clsx("block grow-0 shrink-0 basis-auto ")}
+                className={clsx("block grow-0 shrink-0 basis-fit ")}
               >
                 <Link
                   href={mkLink(v.href)}
                   className={clsx(
-                    "flex items-center justify-center shrink-0 grow-0 h-full w-auto hover:text-black/50 transition-colors py-1 px-4 rounded-3xl",
+                    "flex items-center justify-center shrink-0 grow-0 h-full w-fit hover:text-black/50 transition-colors py-1 px-4 rounded-3xl",
                     selected === v.href &&
                       "hover:text-black! hover:bg-zinc-200/75 bg-zinc-200/50"
                   )}

@@ -17,6 +17,8 @@ type ArticleItem = {
   href: string;
   href_main: string;
   href_sub: string;
+  subscribtion: string;
+  img_list: { href: string; src: string }[];
 };
 
 export const Body = () => {
@@ -31,6 +33,63 @@ export const Body = () => {
       href: "/",
       href_main: "/",
       href_sub: "/",
+      subscribtion: "Malang, Indonesia",
+      img_list: [
+        { href: "/", src: "/article1_lilstItem1.png" },
+        { href: "/", src: "/article1_lilstItem2.webp" },
+        { href: "/", src: "/article1_lilstItem3.png" },
+      ],
+    },
+    {
+      img: "article1img.webp",
+      icon: "article1.png",
+      title: "widelab",
+      sub: "Team",
+      like: "111",
+      looks: "20.3k",
+      href: "/",
+      href_main: "/",
+      href_sub: "/",
+      subscribtion: "Malang, Indonesia",
+      img_list: [
+        { href: "/", src: "/article1_lilstItem1.png" },
+        { href: "/", src: "/article1_lilstItem2.webp" },
+        { href: "/", src: "/article1_lilstItem3.png" },
+      ],
+    },
+    {
+      img: "article1img.webp",
+      icon: "article1.png",
+      title: "widelab",
+      sub: "Team",
+      like: "111",
+      looks: "20.3k",
+      href: "/",
+      href_main: "/",
+      href_sub: "/",
+      subscribtion: "Malang, Indonesia",
+      img_list: [
+        { href: "/", src: "/article1_lilstItem1.png" },
+        { href: "/", src: "/article1_lilstItem2.webp" },
+        { href: "/", src: "/article1_lilstItem3.png" },
+      ],
+    },
+    {
+      img: "article1img.webp",
+      icon: "article1.png",
+      title: "widelab",
+      sub: "Team",
+      like: "111",
+      looks: "20.3k",
+      href: "/",
+      href_main: "/",
+      href_sub: "/",
+      subscribtion: "Malang, Indonesia",
+      img_list: [
+        { href: "/", src: "/article1_lilstItem1.png" },
+        { href: "/", src: "/article1_lilstItem2.webp" },
+        { href: "/", src: "/article1_lilstItem3.png" },
+      ],
     },
   ];
   return (
@@ -69,6 +128,8 @@ const ArticleItem = ({
   href,
   href_main,
   href_sub,
+  subscribtion,
+  img_list,
 }: ArticleItem) => {
   const [hoverBtnLine, setHoverBtnLine] = useState(false);
   const [openHoverCard, setOpenHoverCard] = useState(false);
@@ -107,33 +168,24 @@ const ArticleItem = ({
         onHoverEnd={() => setHoverBtnLine(false)}
       >
         <motion.div
-          className="absolute top-0 -translate-y-full left-0 w-[500px] h-[200px] bg-red-300 rounded-xl z-10 shadow-xl"
+          className="absolute top-0 -translate-y-full left-0 w-[500px] h-[200px] z-10"
           initial={{ display: "none" }}
           animate={{
             display: openHoverCard ? "block" : "none",
             opacity: openHoverCard ? 1 : 0,
           }}
           transition={{ duration: openHoverCard ? 0.1 : 0 }}
-          // style={{ transitionBehavior: "allow-discrete" }}
         >
-          <div>
-            <Link href={href}>
-              <Image
-                src={"/" + icon}
-                alt={icon}
-                width={24}
-                height={24}
-                className="rounded-full"
-              ></Image>
-            </Link>
-            <Link
-              href={href_sub}
-              className="block w-auto h-auto text-[0.65rem] font-bold text-white py-[0.1rem] px-[0.2rem] bg-gray-300 hover:bg-black rounded-sm cursor-pointer"
-            >
-              {sub}
-            </Link>
-          </div>
-          <div></div>
+          <HoverCardContent
+            href={href}
+            sub={sub}
+            href_main={href_main}
+            href_sub={href_sub}
+            title={title}
+            subscribtion={subscribtion}
+            icon={icon}
+            img_list={img_list}
+          />
         </motion.div>
         <div className="flex items-center gap-2 text-sm select-none">
           <motion.a
@@ -154,7 +206,7 @@ const ArticleItem = ({
           </motion.a>
           <Link
             href={href_sub}
-            className="block w-auto h-auto text-[0.65rem] font-bold text-white py-[0.1rem] px-[0.2rem] bg-gray-300 hover:bg-black rounded-sm cursor-pointer"
+            className="block w-fit h-fit text-[0.65rem] font-bold text-white py-[0.1rem] px-[0.2rem] bg-gray-300 hover:bg-black rounded-sm cursor-pointer"
           >
             {sub}
           </Link>
@@ -174,5 +226,82 @@ const ArticleItem = ({
         </div>
       </motion.div>
     </article>
+  );
+};
+
+const HoverCardContent = ({
+  href,
+  icon,
+  href_sub,
+  href_main,
+  sub,
+  title,
+  subscribtion,
+  img_list,
+}: {
+  href: string;
+  icon: string;
+  href_sub: string;
+  href_main: string;
+  sub: string;
+  title: string;
+  subscribtion: string;
+  img_list: { src: string; href: string }[];
+}) => {
+  return (
+    <div
+      className="grid w-full h-full p-6 bg-white rounded-xl shadow-xl"
+      style={{ gridTemplateRows: "max-content auto" }}
+    >
+      <div className="flex items-center">
+        <div className="relative w-fit h-fit">
+          <Link href={href}>
+            <Image
+              src={"/" + icon}
+              alt={icon}
+              width={52}
+              height={52}
+              className="rounded-full"
+            ></Image>
+          </Link>
+          <Link
+            href={href_sub}
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 block w-fit h-fit text-[0.65rem] font-bold text-white py-[0.1rem] px-[0.2rem] bg-gray-300 hover:bg-black rounded-sm cursor-pointer"
+          >
+            {sub}
+          </Link>
+        </div>
+        <div className="grow pl-3">
+          <Link className="block text-md w-fit" href={href_main}>
+            {title}
+          </Link>
+          <span className="block text-xs text-gray-500">{subscribtion}</span>
+        </div>
+        <Link
+          href={"/"}
+          className="flex items-center px-4 py-2 h-max shrink-0 text-[0.85rem] md:text-sm text-black bg-white border border-gray-200 font-semibold hover:border-gray-300 transition-colors rounded-3xl"
+        >
+          Follow
+        </Link>
+        <Link
+          href={"/"}
+          className="flex items-center px-4 py-2 ml-2 h-max shrink-0 text-[0.85rem] md:text-sm text-white bg-black font-semibold hover:opacity-50 transition-opacity rounded-3xl"
+        >
+          Get in touch
+        </Link>
+      </div>
+      <ul className="flex h-full gap-3 pt-3">
+        {img_list.map((v, idx) => (
+          <li key={idx} className="w-full h-full rounded-xl">
+            <Link
+              href={v.href}
+              className="block relative w-full h-full rounded-xl"
+            >
+              <Image fill src={v.src} alt={v.src} className="rounded-xl" />
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 };

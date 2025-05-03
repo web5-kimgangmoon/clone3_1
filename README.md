@@ -106,3 +106,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 05/02
 
 1. 아이템의 interaction 작성 중.
+
+### 05/03
+
+1. body item 컴포넌트 작성 완료.
