@@ -110,3 +110,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 05/03
 
 1. body item 컴포넌트 작성 완료.
+
+### 05/05
+
+1. 무한 스크롤 작성완료.

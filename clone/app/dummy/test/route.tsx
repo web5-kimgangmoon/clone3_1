@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
-import { Test } from "../mysql/test/index.model";
-import { sequelize } from "../mysql";
+import { Test } from "../../mysql/test/index.model";
+import { sequelize } from "../../mysql";
 // import { Sequelize } from "sequelize";
 
 export async function GET(request: NextRequest) {

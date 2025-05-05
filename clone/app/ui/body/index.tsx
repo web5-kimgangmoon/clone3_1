@@ -3,95 +3,58 @@ import { Body_header } from "./header";
 import Image from "next/image";
 import { DocumentIcon, EyeIcon, HeartIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { motion, useScroll } from "motion/react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog } from "@headlessui/react";
+import { ArticleItemTy } from "@/app/request/useGetBodyItem";
+import { unitconvertor } from "@/app/lib/unitconvertor";
 
-type ArticleItem = {
-  img: string;
-  icon: string;
-  title: string;
-  sub: string;
-  like: string;
-  looks: string;
-  href: string;
-  href_main: string;
-  href_sub: string;
-  subscribtion: string;
-  img_list: { href: string; src: string }[];
-};
-
-export const Body = () => {
-  const articleList: ArticleItem[] = [
-    {
-      img: "article1img.webp",
-      icon: "article1.png",
-      title: "widelab",
-      sub: "Team",
-      like: "111",
-      looks: "20.3k",
-      href: "/",
-      href_main: "/",
-      href_sub: "/",
-      subscribtion: "Malang, Indonesia",
-      img_list: [
-        { href: "/", src: "/article1_lilstItem1.png" },
-        { href: "/", src: "/article1_lilstItem2.webp" },
-        { href: "/", src: "/article1_lilstItem3.png" },
-      ],
+export const Body = ({
+  articleList,
+  nextPage,
+  isFetchingNextPage,
+  hasNextPage,
+}: {
+  articleList: ArticleItemTy[];
+  nextPage: () => void;
+  isFetchingNextPage: boolean;
+  hasNextPage: boolean;
+}) => {
+  const ref = useRef(null);
+  const scroll = useScroll({ target: ref });
+  const change = useCallback(
+    (l: number) => {
+      if (l > 0.8 && !isFetchingNextPage && hasNextPage) {
+        nextPage();
+      }
     },
-    {
-      img: "article1img.webp",
-      icon: "article1.png",
-      title: "widelab",
-      sub: "Team",
-      like: "111",
-      looks: "20.3k",
-      href: "/",
-      href_main: "/",
-      href_sub: "/",
-      subscribtion: "Malang, Indonesia",
-      img_list: [
-        { href: "/", src: "/article1_lilstItem1.png" },
-        { href: "/", src: "/article1_lilstItem2.webp" },
-        { href: "/", src: "/article1_lilstItem3.png" },
-      ],
-    },
-    {
-      img: "article1img.webp",
-      icon: "article1.png",
-      title: "widelab",
-      sub: "Team",
-      like: "111",
-      looks: "20.3k",
-      href: "/",
-      href_main: "/",
-      href_sub: "/",
-      subscribtion: "Malang, Indonesia",
-      img_list: [
-        { href: "/", src: "/article1_lilstItem1.png" },
-        { href: "/", src: "/article1_lilstItem2.webp" },
-        { href: "/", src: "/article1_lilstItem3.png" },
-      ],
-    },
-    {
-      img: "article1img.webp",
-      icon: "article1.png",
-      title: "widelab",
-      sub: "Team",
-      like: "111",
-      looks: "20.3k",
-      href: "/",
-      href_main: "/",
-      href_sub: "/",
-      subscribtion: "Malang, Indonesia",
-      img_list: [
-        { href: "/", src: "/article1_lilstItem1.png" },
-        { href: "/", src: "/article1_lilstItem2.webp" },
-        { href: "/", src: "/article1_lilstItem3.png" },
-      ],
-    },
-  ];
+    [isFetchingNextPage, hasNextPage, nextPage]
+  );
+  useEffect(() => {
+    if (ref) scroll.scrollYProgress.on("change", change);
+    return () => {
+      scroll.scrollYProgress.clearListeners();
+    };
+  }, [ref, change]);
+  // const articleList: ArticleItemTy[] = [
+  //   {
+  //     img: "article1img.webp",
+  //     icon: "article1.png",
+  //     title: "widelab",
+  //     sub: "Team",
+  //     like: 111,
+  //     looks: 203000,
+  //     href: "/",
+  //     href_main: "/",
+  //     href_sub: "/",
+  //     subscribtion: "Malang, Indonesia",
+  //     img_list: [
+  //       { href: "/", src: "/article1_lilstItem1.png" },
+  //       { href: "/", src: "/article1_lilstItem2.webp" },
+  //       { href: "/", src: "/article1_lilstItem3.png" },
+  //     ],
+  //   },
+  // ];
   return (
     <div
       className={clsx(
@@ -100,16 +63,10 @@ export const Body = () => {
       )}
     >
       <Body_header />
-      <section className="container grid  grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-10">
-        {articleList.map((v, idx) => (
-          <ArticleItem {...v} key={idx} />
-        ))}
-        {articleList.map((v, idx) => (
-          <ArticleItem {...v} key={idx} />
-        ))}
-        {articleList.map((v, idx) => (
-          <ArticleItem {...v} key={idx} />
-        ))}
+      <section
+        className="container grid  grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-10"
+        ref={ref}
+      >
         {articleList.map((v, idx) => (
           <ArticleItem {...v} key={idx} />
         ))}
@@ -130,7 +87,7 @@ const ArticleItem = ({
   href_sub,
   subscribtion,
   img_list,
-}: ArticleItem) => {
+}: ArticleItemTy) => {
   const [hoverBtnLine, setHoverBtnLine] = useState(false);
   const [openHoverCard, setOpenHoverCard] = useState(false);
   useEffect(() => {
@@ -217,11 +174,11 @@ const ArticleItem = ({
               className="w-[16px] h-[16px] text-gray-600/75"
               fill="currentColor"
             />
-            <span className="text-xs">{like}</span>
+            <span className="text-xs">{unitconvertor(like)}</span>
           </span>
           <span className="flex items-center gap-1">
             <EyeIcon className="w-[16px] h-[16px]" />
-            <span className="text-xs">{looks}</span>
+            <span className="text-xs">{unitconvertor(looks)}</span>
           </span>
         </div>
       </motion.div>
