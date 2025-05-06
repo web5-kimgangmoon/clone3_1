@@ -114,3 +114,7 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 05/05
 
 1. 무한 스크롤 작성완료.
+
+### 05/06
+
+1. 황금연휴 하루 쉽니다.
