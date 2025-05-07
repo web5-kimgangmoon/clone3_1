@@ -1,13 +1,20 @@
 import clsx from "clsx";
 import { Body_header } from "./header";
 import Image from "next/image";
-import { DocumentIcon, EyeIcon, HeartIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowUpIcon,
+  ChevronUpIcon,
+  DocumentIcon,
+  EyeIcon,
+  HeartIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { motion, useScroll } from "motion/react";
+import { motion, useMotionValueEvent, useScroll } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Dialog } from "@headlessui/react";
 import { ArticleItemTy } from "@/app/request/useGetBodyItem";
 import { unitconvertor } from "@/app/lib/unitconvertor";
+import { useLenis } from "lenis/react";
 
 export const Body = ({
   articleList,
@@ -20,8 +27,8 @@ export const Body = ({
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
 }) => {
-  const ref = useRef(null);
-  const scroll = useScroll({ target: ref });
+  const scroll = useScroll();
+  const lenis = useLenis();
   const change = useCallback(
     (l: number) => {
       if (l > 0.8 && !isFetchingNextPage && hasNextPage) {
@@ -30,47 +37,37 @@ export const Body = ({
     },
     [isFetchingNextPage, hasNextPage, nextPage]
   );
+  useMotionValueEvent(scroll.scrollYProgress, "change", change);
   useEffect(() => {
-    if (ref) scroll.scrollYProgress.on("change", change);
-    return () => {
-      scroll.scrollYProgress.clearListeners();
-    };
-  }, [ref, change]);
-  // const articleList: ArticleItemTy[] = [
-  //   {
-  //     img: "article1img.webp",
-  //     icon: "article1.png",
-  //     title: "widelab",
-  //     sub: "Team",
-  //     like: 111,
-  //     looks: 203000,
-  //     href: "/",
-  //     href_main: "/",
-  //     href_sub: "/",
-  //     subscribtion: "Malang, Indonesia",
-  //     img_list: [
-  //       { href: "/", src: "/article1_lilstItem1.png" },
-  //       { href: "/", src: "/article1_lilstItem2.webp" },
-  //       { href: "/", src: "/article1_lilstItem3.png" },
-  //     ],
-  //   },
-  // ];
+    lenis?.resize();
+  }, [articleList]);
   return (
     <div
       className={clsx(
-        "w-full h-[40rem]",
+        "relative w-full h-[40rem]",
         "before:content-[''] before:block before:pt-[120px] before:md:pt-[100px] before:bg-white"
       )}
     >
       <Body_header />
-      <section
-        className="container grid  grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-10"
-        ref={ref}
-      >
-        {articleList.map((v, idx) => (
-          <ArticleItem {...v} key={idx} />
+      <section className="container grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-10">
+        {articleList.map((v) => (
+          <ArticleItem {...v} key={v.id} />
         ))}
       </section>
+      <div className="flex justify-center w-full h-max py-12">
+        <Link
+          href={"/"}
+          className="flex items-center px-5 py-[0.6rem] shrink-0 text-[0.85rem] md:text-sm text-white bg-black font-semibold hover:opacity-50 transition-opacity rounded-3xl"
+        >
+          Sign up to continue
+        </Link>
+      </div>
+      <button
+        className="sticky bottom-5 left-full -translate-x-5 p-[0.6rem] bg-black opacity-30 rounded-full cursor-pointer"
+        onClick={() => lenis?.scrollTo(0)}
+      >
+        <ArrowUpIcon className="w-[1.3rem] text-white" />
+      </button>
     </div>
   );
 };

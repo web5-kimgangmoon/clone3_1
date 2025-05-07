@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
         limit: limit ? Number(limit) : 0,
         include: ItemImg,
       }),
-      nextPage: cnt > start + limit ? start / limit + 1 : false,
+      nextPage: cnt > start + limit ? start / limit + 2 : false,
     },
     { status: 200 }
   );

@@ -118,3 +118,8 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 ### 05/06
 
 1. 황금연휴 하루 쉽니다.
+
+### 05/07
+
+1. body 완성.
+2. lenis 추가.

@@ -7,6 +7,7 @@ import { axiosSet } from "../lib/axios";
 import axios from "axios";
 
 export type ArticleItemTy = {
+  id: number;
   img: string;
   icon: string;
   title: string;
@@ -31,14 +32,14 @@ export const useGetBodyItem = (pageSize: number) =>
     Error,
     InfiniteData<ResponseData, number>,
     QueryKey,
-    number
+    number | null
   >({
     queryKey: ["get", "item", pageSize],
     queryFn: async ({ pageParam = 1 }) => {
       const result = await axiosSet.get("/list", {
         withCredentials: process.env.DEPLOY === "true",
         params: {
-          start: (pageParam - 1) * pageSize,
+          start: pageParam !== null ? (pageParam - 1) * pageSize : null,
           limit: pageSize,
         },
       });

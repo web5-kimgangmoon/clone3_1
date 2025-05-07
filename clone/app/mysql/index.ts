@@ -19,18 +19,6 @@ sequelize.addModels([ItemImg, Article]);
 
 export const initSQL = async () => {
   await sequelize.sync({ force: true });
-  const img1 = await ItemImg.create({
-    href: "/",
-    src: "/article1_lilstItem1.png",
-  });
-  const img2 = await ItemImg.create({
-    href: "/",
-    src: "/article1_lilstItem2.webp",
-  });
-  const img3 = await ItemImg.create({
-    href: "/",
-    src: "/article1_lilstItem3.png",
-  });
   for (let i = 0; i < 50; i++) {
     await Article.create({
       img: "article1img.webp",
@@ -43,7 +31,21 @@ export const initSQL = async () => {
       href_main: "/",
       href_sub: "/",
       subscribtion: "Malang, Indonesia",
-      img_list: [img1, img2, img3],
+    });
+    const img1 = await ItemImg.create({
+      href: "/",
+      src: "/article1_lilstItem1.png",
+      articleId: i + 1,
+    });
+    const img2 = await ItemImg.create({
+      href: "/",
+      src: "/article1_lilstItem2.webp",
+      articleId: i + 1,
+    });
+    const img3 = await ItemImg.create({
+      href: "/",
+      src: "/article1_lilstItem3.png",
+      articleId: i + 1,
     });
   }
 };

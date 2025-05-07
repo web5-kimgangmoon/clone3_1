@@ -5,6 +5,7 @@ import { useEventListStore_globalClick } from "./zustand/eventList_globalClick";
 import { TanstackProvider } from "./components/tanstackProvider";
 import useBreakpointProvider from "./hooks/useBreakpointProvider";
 import { BodyContainer } from "./container/body";
+import { ReactLenis } from "lenis/react";
 
 export default function Home() {
   useBreakpointProvider();
@@ -12,10 +13,12 @@ export default function Home() {
 
   return (
     <TanstackProvider>
-      <body onClick={execute} className="min-h-screen">
-        <Header />
-        <BodyContainer />
-      </body>
+      <ReactLenis root options={{ autoRaf: true }}>
+        <body onClick={execute} className="min-h-screen">
+          <Header />
+          <BodyContainer />
+        </body>
+      </ReactLenis>
     </TanstackProvider>
   );
 }

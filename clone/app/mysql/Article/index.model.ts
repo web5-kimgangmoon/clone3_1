@@ -10,12 +10,7 @@ import {
 import { ItemImg } from "../itemImg/index.model";
 
 @Table({ timestamps: true, paranoid: true })
-export class Article extends Model<ArticleItemTy> {
-  @AutoIncrement
-  @PrimaryKey
-  @Column
-  id!: number;
-
+export class Article extends Model {
   @Column
   img!: string;
 
