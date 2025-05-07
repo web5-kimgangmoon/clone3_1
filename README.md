@@ -10,7 +10,7 @@ https://dribbble.com/shots/popular/product-design
 
 ### 스택
 
-next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard
+next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard, headless-ui, zod
 
 ### 필요없는 라이브러리(클론 코딩과 관련없지만 개인학습 용도로 설치)
 
@@ -61,3 +61,65 @@ next, motion-framer, swiper, react, tailwind, github, @heroicons/react, react-qu
 ### 04/19
 
 1. 헤더 완성.(헤더 반응형 애니메이션 작성완료)
+
+### 04/21
+
+1. 바디 작성 시작
+2. mui 시도 중
+
+### 04/22
+
+1. headless ui 발견
+
+### 04/23
+
+1. 다른 개념에 대해 공부했습니다.
+
+### 04/24
+
+1. 새로운 슬라이드 라이브러리 embla-carousel-react 도입, swiper는 이번 클론코딩에서 뺐습니다.
+
+### 04/25
+
+1. headless UI 학습중...
+
+### 04/26
+
+1. 게으름 부렸습니다. 다시는 이런 일 없도록 하겠습니다.
+
+### 04/28
+
+1. zod 추가, useFilteredNumEng 훅 추가
+
+### 04/29
+
+1. body 헤더, 팔레트 제외한 레이아웃은 대체로 작성 완료.
+
+### 04/30
+
+1. body 헤더 완성.
+
+### 05/01
+
+1. 아이템 기본상태 완성, 상호작용 추가 필요.
+
+### 05/02
+
+1. 아이템의 interaction 작성 중.
+
+### 05/03
+
+1. body item 컴포넌트 작성 완료.
+
+### 05/05
+
+1. 무한 스크롤 작성완료.
+
+### 05/06
+
+1. 황금연휴 하루 쉽니다.
+
+### 05/07
+
+1. body 완성.
+2. lenis 추가.

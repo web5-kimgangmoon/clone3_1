@@ -1,4 +1,4 @@
-import { Logo } from "@/public/logo";
+import { Logo } from "@/public/Logo";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import clsx from "clsx";
 import Link from "next/link";
