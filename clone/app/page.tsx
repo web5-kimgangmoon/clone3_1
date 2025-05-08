@@ -6,6 +6,7 @@ import { TanstackProvider } from "./components/tanstackProvider";
 import useBreakpointProvider from "./hooks/useBreakpointProvider";
 import { BodyContainer } from "./container/body";
 import { ReactLenis } from "lenis/react";
+import { Footer } from "./ui/footer";
 
 export default function Home() {
   useBreakpointProvider();
@@ -13,12 +14,13 @@ export default function Home() {
 
   return (
     <TanstackProvider>
-      <ReactLenis root options={{ autoRaf: true }}>
-        <body onClick={execute} className="min-h-screen">
-          <Header />
-          <BodyContainer />
-        </body>
-      </ReactLenis>
+      {/* <ReactLenis root options={{ autoRaf: true }}> */}
+      <body onClick={execute} className="min-h-screen overflow-x-hidden">
+        <Header />
+        <BodyContainer />
+        <Footer />
+      </body>
+      {/* </ReactLenis> */}
     </TanstackProvider>
   );
 }

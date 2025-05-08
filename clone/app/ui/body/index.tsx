@@ -9,12 +9,17 @@ import {
   HeartIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { motion, useMotionValueEvent, useScroll } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Dialog } from "@headlessui/react";
+import {
+  motion,
+  useInView,
+  useMotionValueEvent,
+  useScroll,
+} from "motion/react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArticleItemTy } from "@/app/request/useGetBodyItem";
 import { unitconvertor } from "@/app/lib/unitconvertor";
-import { useLenis } from "lenis/react";
+import { useBreakpointStore } from "@/app/zustand/breakpoint";
+// import { useLenis } from "lenis/react";
 
 export const Body = ({
   articleList,
@@ -27,8 +32,10 @@ export const Body = ({
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
 }) => {
-  const scroll = useScroll();
-  const lenis = useLenis();
+  const ref = useRef(null);
+  const btnRef = useRef<null | HTMLButtonElement>(null);
+  const scroll = useScroll({ target: ref });
+  // const lenis = useLenis();
   const change = useCallback(
     (l: number) => {
       if (l > 0.8 && !isFetchingNextPage && hasNextPage) {
@@ -39,22 +46,47 @@ export const Body = ({
   );
   useMotionValueEvent(scroll.scrollYProgress, "change", change);
   useEffect(() => {
-    lenis?.resize();
-  }, [articleList]);
+    if (btnRef.current && scroll.scrollYProgress.get() === 0) {
+      btnRef.current.style.opacity = "0%";
+      btnRef.current.style.visibility = "hidden";
+    }
+    if (btnRef.current && scroll.scrollYProgress.get() === 1) {
+      btnRef.current.style.position = "absolute";
+      btnRef.current.style.bottom = "25px";
+    }
+
+    scroll.scrollYProgress.on("change", (l) => {
+      if (btnRef.current && scroll.scrollYProgress.get() === 0) {
+        btnRef.current.style.opacity = "0%";
+        btnRef.current.style.visibility = "hidden";
+      } else if (btnRef.current && scroll.scrollYProgress.get() !== 0) {
+        btnRef.current.style.opacity = "30%";
+        btnRef.current.style.visibility = "visible";
+      }
+      if (l === 1 && btnRef.current) {
+        btnRef.current.style.position = "absolute";
+        btnRef.current.style.bottom = "25px";
+      } else if (l !== 1 && btnRef.current) {
+        btnRef.current.style.position = "fixed";
+        btnRef.current.style.bottom = "15px";
+      }
+    });
+  }, [btnRef]);
   return (
     <div
       className={clsx(
-        "relative w-full h-[40rem]",
+        "relative w-full h-auto",
         "before:content-[''] before:block before:pt-[120px] before:md:pt-[100px] before:bg-white"
       )}
+      ref={ref}
     >
       <Body_header />
       <section className="container grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xxl:grid-cols-4 gap-10">
-        {articleList.map((v) => (
-          <ArticleItem {...v} key={v.id} />
+        {articleList.map((v, idx) => (
+          <ArticleItem {...v} idx={idx + 1} key={v.id} />
         ))}
       </section>
-      <div className="flex justify-center w-full h-max py-12">
+      <div className="flex justify-center w-full h-max pt-12">
         <Link
           href={"/"}
           className="flex items-center px-5 py-[0.6rem] shrink-0 text-[0.85rem] md:text-sm text-white bg-black font-semibold hover:opacity-50 transition-opacity rounded-3xl"
@@ -63,8 +95,12 @@ export const Body = ({
         </Link>
       </div>
       <button
-        className="sticky bottom-5 left-full -translate-x-5 p-[0.6rem] bg-black opacity-30 rounded-full cursor-pointer"
-        onClick={() => lenis?.scrollTo(0)}
+        ref={btnRef}
+        className={clsx(
+          "right-0 -translate-x-5 p-[0.6rem] bg-black opacity-30 rounded-full cursor-pointer transition-opacity"
+        )}
+        style={{ position: "absolute" }}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       >
         <ArrowUpIcon className="w-[1.3rem] text-white" />
       </button>
@@ -84,14 +120,23 @@ const ArticleItem = ({
   href_sub,
   subscribtion,
   img_list,
-}: ArticleItemTy) => {
+  idx,
+}: ArticleItemTy & { idx: number }) => {
   const [hoverBtnLine, setHoverBtnLine] = useState(false);
   const [openHoverCard, setOpenHoverCard] = useState(false);
   useEffect(() => {
     if (!hoverBtnLine) setOpenHoverCard(false);
   }, [hoverBtnLine]);
+  const bp = useBreakpointStore((state) => state.breakpoint);
+  const isEnd = useMemo(() => {
+    let result: boolean = false;
+    if (bp === "xxl" && idx % 4 === 0) result = true;
+    if (bp === "xl" && idx % 3 === 0) result = true;
+    if (bp === "md" && idx % 2 === 0) result = true;
+    return result;
+  }, [bp]);
   return (
-    <article className="aspect-4/3">
+    <article className={clsx("aspect-4/3")}>
       <div className={clsx("relative h-full rounded-xl")}>
         <figure className="w-full h-full relative">
           <Image src={"/" + img} alt={img} fill className="rounded-xl"></Image>
@@ -106,10 +151,10 @@ const ArticleItem = ({
           <div className="opacity-0 group-hover/link:opacity-100 absolute top-3/4 left-0 flex gap-2 justify-between items-center w-full h-[25%] p-3 text-white font-bold">
             <span className="truncate">Jobs platform dashboard</span>
             <div className="flex gap-2">
-              <span className="inline-block text-black bg-white rounded-full p-3">
+              <span className="inline-block text-black bg-white rounded-full p-3 transition-colors hover:text-black/50">
                 <DocumentIcon className="w-5" />
               </span>
-              <span className="inline-block text-black bg-white rounded-full p-3">
+              <span className="inline-block text-black bg-white rounded-full p-3 transition-colors hover:text-black/50">
                 <HeartIcon className="w-5" />
               </span>
             </div>
@@ -122,7 +167,13 @@ const ArticleItem = ({
         onHoverEnd={() => setHoverBtnLine(false)}
       >
         <motion.div
-          className="absolute top-0 -translate-y-full left-0 w-[500px] h-[200px] z-10"
+          className={clsx(
+            "absolute top-0 -translate-y-full w-[500px] h-[200px] z-10",
+            {
+              "left-0": !isEnd,
+              "-left-1/2": isEnd,
+            }
+          )}
           initial={{ display: "none" }}
           animate={{
             display: openHoverCard ? "block" : "none",
