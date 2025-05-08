@@ -49,10 +49,14 @@ input:autofill {
 }
 
 @utility container {
+  width: auto;
   max-width: unset;
-  padding-inline: 40px;
+  margin-inline: 1rem;
+  @media screen and (min-width: 790px) {
+    margin-inline: 40px;
+  }
   @media screen and (min-width: 1200px) {
-    padding-inline: 4.5rem;
+    margin-inline: 4.5rem;
   }
 }
 

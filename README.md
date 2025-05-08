@@ -10,7 +10,7 @@ https://dribbble.com/shots/popular/product-design
 
 ### 스택
 
-next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard, headless-ui, zod
+next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, react-query, axios, zustand, pretendard, headless-ui, zod, react-share
 
 ### 필요없는 라이브러리(클론 코딩과 관련없지만 개인학습 용도로 설치)
 
@@ -123,3 +123,31 @@ next, motion-framer, Embla Carousel, react, tailwind, github, @heroicons/react, 
 
 1. body 완성.
 2. lenis 추가.
+
+### 05/08
+
+1. hovercard가 스크린을 벗어날 경우의 overflow-hidden 추가, padding-inline을 margin-inline으로 변경.
+2. footer 완성
+3. convenience 버튼 수정.
+4. 최적화를 위해 lenis를 뺐습니다.
+
+### 작업일
+
+- **1주차(4/12~4/19)**: header 작성 완료. (footer 미완료)
+- **2주차(4/21~26)**: 주요 라이브러리 학습.
+- **3주차(4/28~5/3)**: body ui 작성.
+- **4주차(5/5~5/8)**: footer 완성. 기능들 추가.
+
+### 반성점
+
+1. 반복되는 클론코딩에 질려 부지런하게 하지 못했다. 다음에는 학습목표를 다양하게 잡아 경험해봐야겠다.
+
+2. 쓸데없는 디테일에 너무 집착했다. 다소는 클론코딩사이트와 어긋나도 상관없었는데 지나치게 신경썼다.
+
+3. 구현할 것과 구현하지 않을 것을 철저하게 나눴어야 했다.
+
+### 느낀점
+
+1. 무한스크롤을 언젠가 제대로 구현해보고 싶다고 생각했고, 클론코딩 기간동안 구현해보는 일에 성공했다.
+
+2. 스스로도 오랜 시간이 걸렸고, 그 단축을 위해 다양한 라이브러리를 활용해봤다. 그 덕분에 라이브러리들이 대체적으로 지닌 공통적인 사용패턴에 다소 익숙해진 것 같다.
